@@ -3,7 +3,6 @@
   $Id$
 {% endcomment %}
 
-{% load siteads %}
 {% load humanize %}
 
 {% block content %}
@@ -17,16 +16,13 @@
  {% if page.object_list %}
   {% include "sorter.html" %}
   <div class="ads">
-  {% block sponsored %}
-  {% sitead "sponsored" %}
-  {% endblock %}
   {% for ad in page.object_list %}
    <div class="ad{% if forloop.first %} first{% endif %}{% if ad.is_featured %} featured{% endif %}">
     <div class="description">
     {% if ad.adimage_set.all.0.get_thumb_photo_url %}
      <img src="{{ ad.adimage_set.all.0.get_thumb_photo_url }}" alt="Photo Thumbnail" />
     {% else %}
-     <img src="{{ MEDIA_URL }}images/none.jpeg" alt="No Photo" />
+     <span class="img">No Photo</span>
     {% endif %}
      <div class="title">{{ ad.title }}</div>
      <div class="right">

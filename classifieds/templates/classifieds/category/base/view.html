@@ -9,7 +9,7 @@
 <div class="head">
  <span id="jobId">Ad Id : {{ ad.pk }}</span>
  <h2 style="margin: 0px; font-size: 16px;">{{ ad.title }}</h2>
-  <h3>Property Type: {{ ad.fields_dict.businesstype }}</h3>
+  <h3>Business Type: {{ ad.fields_dict.businesstype }}</h3>
   <h4>Location: {% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}</h4>
 </div>
 
@@ -21,10 +21,11 @@
 <div id="sidebarView">
  <p class="head">Contact Information</p>
  <p>{{ ad.fields_dict.contactname }}</p>
+ <p>{% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}</p>
  <p>{{ ad.fields_dict.phone }}</p>
  <p>{{ ad.fields_dict.contactcompanyname }}</p>
  <p><a href="http://www.{{ ad.fields_dict.website }}" target="_blank">{{ ad.fields_dict.website|slice:":26" }}</a></p>
- <p><a href="{% url contact.views.contact_ad ad.pk %}"><img src="{{ MEDIA_URL }}images/sellerButton.png"  alt="Contact" /></a></p>
+ <p><a href="{% url contact.views.contact_ad ad.pk %}">Contact Seller</a></p>
  <ul class="head">
   <li><a href="javascript:window.print();">Print This Ad</a></li>
   <li><a href="javascript:;" onclick="window.location.href='mailto:?body=&quot;http://{{ site.domain }}/ads/{{ ad.pk }}&quot;';">Tell a Friend</a></li>

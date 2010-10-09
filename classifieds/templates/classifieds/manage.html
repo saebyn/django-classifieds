@@ -30,7 +30,7 @@
     {% if ad.adimage_set.all.0.get_thumb_photo_url %}
      <img src="{{ ad.adimage_set.all.0.get_thumb_photo_url }}" alt="Photo Thumbnail" />
     {% else %}
-     <img src="{{ MEDIA_URL }}images/none.jpeg" alt="No Photo" />
+     <span class="img">No Photo</span>
     {% endif %}
      <div class="title">{{ ad.title }}</div>
      <div class="right">
