@@ -1,0 +1,11 @@
+{% comment %}
+  $Id$
+{% endcomment %}
+
+Hello {{ ad.user.first_name }},
+
+Your {{ ad.category.name }} posting, titled '{{ ad.title }}', has been processed and
+will appear once payment clears. You will receive another email once this happens.
+
+-- The {{ ad.category.site.name }} Team
+

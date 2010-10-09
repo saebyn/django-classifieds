@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% comment %}
+  $Id$
+{% endcomment %}
+
+{% block content %}
+<div style="display: none;">
+  {{ form }}
+</div>
+<div style="text-align: center; padding: 100px;">
+ Please wait while we transfer you to PayPal.com.<br />
+ <small>If this takes more than five seconds, <a href="javascript:;" onclick="document.forms[0].submit();">Click here</a></small>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    document.forms[0].submit();
+  });
+</script>
+{% endblock %}

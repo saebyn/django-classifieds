@@ -1,0 +1,20 @@
+{% comment %}
+  $Id$
+{% endcomment %}
+
+Hello {{ user.first_name }},
+
+Here are the latest postings from the last 24 hours.
+
+{% for posting in postings %}
+ "{{posting.title}}" in the {{posting.category.name}} category.
+ 
+ {{ posting.fields_dict.description }}
+ 
+ http://{{site.domain}}{{ url classifieds.views.view posting.pk }}
+ 
+ ------------------------------------------------------------------------------
+{% endfor %}
+
+-- {{ site.name }}
+

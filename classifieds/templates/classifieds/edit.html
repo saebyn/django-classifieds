@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% comment %}
+  $Id$
+{% endcomment %}
+
+{% block head %}
+{{ form.media|safe }}
+{% endblock %}
+
+{% block sidebar %}
+<ul>
+ <li><a href="/">Home</a></li>
+</ul>
+<div class="welcome">Welcome, <span class="name">{{ request.user.first_name }}</span></div>
+<ul class="arrow">
+ <li><a href="{% url classifieds.views.create %}">Post a New Ad</a></li>
+ <li><a href="{% url classifieds.views.mine %}">Manage My Ads</a></li>
+ <li><a href="{% url profiles_edit_profile %}">My Profile</a></li>
+ <li><a href="{% url django.contrib.auth.views.logout %}">Logout</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+ {% block ad_create_status %}
+  {% if create %}
+   <h1>Post Ad</h1>
+   <ol class="progress">
+    <li>1 | Select</li>
+    <li class="selected">2 | Post</li>
+    <li>3 | Review</li>
+    <li>4 | Checkout</li>
+   </ol>
+   <p class="step"><strong>Step 2 :</strong> Please Enter Ad/Contact Information</p> 
+  {% endif %}
+ {% endblock %}
+<p>(<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" /> Required Fields)</p>
+<form enctype="multipart/form-data" method="post" action="#">
+ <table id="adEdit">
+  <tr>
+   <th>Category:</th>
+   <td colspan="3" style="font-weight: bold;">{{ ad.category.name }}</td>
+  </tr>
+  {% block form %}
+  {{ form }}
+  {% endblock %}
+  <tr>
+   <td colspan="4">{{ imagesformset.non_form_errors }}</td>
+  </tr>
+  {% if imagesformset.forms %}
+  <tr>
+   <td colspan="4">
+    <h3 style="font-size: 16px;">Add Picture(s)</h3>
+   </td>
+  </tr>
+  <tr>
+   <td colspan="4">Uploaded images must be smaller than {{ ad.category.images_max_size|filesizeformat }}. Images with dimensions larger than {{ ad.category.images_max_width }} by {{ ad.category.images_max_height }} pixels will be resized. 
+   Images must be in one of the following formats:
+   {% for format in ad.category.images_allowed_formats.all %}
+     {{ format.format }}
+   {% endfor %}
+   </td>
+  </tr>
+  {% endif %}
+  {% for imageform in imagesformset.forms %}
+    <tr>
+     <td colspan="4">
+      {{ imageform.id }}
+      <label>Picture #{{ forloop.counter }}</label> {{ imageform.full_photo }}
+      {{ imageform.DELETE.label_tag }}{{ imageform.DELETE }}
+      {% if imageform.initial.thumb_photo %}
+      <img src="{{ MEDIA_URL }}{{ imageform.initial.thumb_photo }}" alt="{}" />
+      {% endif %}
+  	 </td>
+  	</tr>
+  {% endfor %}
+ </table>
+ <p style="text-align: right;">
+  {{ imagesformset.management_form }}
+  <input type="submit" class="submit" value="{% if create %}Create{% else %}Update{% endif %}" />
+ </p>
+</form>
+{% endblock %}
+

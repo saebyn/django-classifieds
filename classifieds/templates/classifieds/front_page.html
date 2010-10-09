@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load siteads %}
+{% comment %}
+  $Id$
+{% endcomment %}
+
+{% block masterheader %}
+<div id="header">
+ <div id="header-ads">
+  <div class="header-ad">
+  {% sitead "header" %}
+  </div>
+  <div class="header-ad">
+  {% sitead "header" %}
+  </div>
+ </div>
+     
+ <div class="header-categories">
+  {% for category in topcategories %}
+  <div class="header-category">
+   <a href="{% url classifieds.views.search_in_category category.pk %}"><img src="{{ MEDIA_URL }}{{ category.image }}" alt="Category Image" title="{{ category.name }} category" width="234" height="60" /></a>
+  </div>
+  {% endfor %}
+ </div>
+
+ <div id="subcategories">
+  Other Categories:
+  {% for category in subcategories %}
+  <a href="{% url classifieds.views.search_in_category category.pk %}"><img src="{{ MEDIA_URL }}{{ category.image }}" alt="Category Image" title="{{ category.name }} category" width="16" height="16" /> {{ category.name }}</a>
+  {% endfor %}
+  <a href="{% url classifieds.views.search %}">View All</a>
+ </div>
+</div>
+{% endblock masterheader %}
+
+{% block content %}
+Test
+{% endblock content %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% comment %}
+  $Id$
+{% endcomment %}
+
+{% block content %}
+<h1>Sign Up</h1>
+<p>Sign up to receive periodic updates and newsletter</p>
+<form method="post" action="#">
+ <table style="width: 445px;">
+  <tr>
+   <th>{{ form.first_name.label_tag }} : <div class="helptext">{{ form.first_name.help_text }}</div></th>
+   <td>
+    {% if form.first_name.errors %}<ul class="errorlist">{{ form.first_name.errors }}</ul>{% endif %}
+    {{ form.first_name }}
+   </td>
+  </tr>
+  <tr>
+   <th>{{ form.last_name.label_tag }} : <div class="helptext">{{ form.last_name.help_text }}</div></th>
+   <td>
+    {% if form.last_name.errors %}<ul class="errorlist">{{ form.last_name.errors }}</ul>{% endif %}
+    {{ form.last_name }}
+   </td>
+  </tr>
+
+  <tr>
+   <th>{{ form.email_address.label_tag }} : <div class="helptext">{{ form.email_address.help_text }}</div></th>
+   <td>
+    {% if form.email_address.errors %}<ul class="errorlist">{{ form.email_address.errors }}</ul>{% endif %}
+    {{ form.email_address }}
+   </td>
+  </tr>
+
+  <tr>
+   <td colspan="2">
+    {% if form.captcha.errors %}<ul class="errorlist">{{ form.captcha.errors }}</ul>{% endif %}
+  </tr>
+
+  <tr style="text-align: right;">
+   <td colspan="2"><input type="submit" class="submit" value="Sign Up" /></td>
+  </tr>
+ </table>
+</form>
+{% endblock %}

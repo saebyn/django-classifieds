@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% comment %}
+  $Id$
+{% endcomment %}
+
+{% block content %}
+<div id="search-box">
+ <img src="{{ MEDIA_URL }}{{ category.image }}" alt="Category Image" title="{{ category.name }} category" width="234" height="60" />
+ <h1>Search in {{ category.name }}</h1>
+ 
+ <form method="post" action="#">
+  <input type="text" class="text" name="keywords" />
+  <input type="submit" class="submit" value="Search" />
+ </form>
+ 
+ <div id="search-filters"></div>
+ <a href="#" id="search-options">More Search Options</a>
+ {% comment %}
+  {% for form in forms %}
+   {{ form }}
+  {% endfor %}
+ {% endcomment %}
+</div>
+
+<p>How this is supposed to work:<br />
+Enter your keywords...<br />
+Search<br />
+See two columns of results below, paginated<br />
+Click "More Search Options"<br />
+Dialog appears, give full set of searchable fields<br />
+Click "Search" in dialog<br />
+Search form is submitted<br />
+New page shows all search options in #search-filters area<br />
+Clicking [x] on search filter updates hidden form fields and resubmits
+</p>
+
+{% endblock %}

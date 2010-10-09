@@ -1,0 +1,159 @@
+{% extends "classifieds/edit.html" %}
+{% comment %}
+  $Id$
+{% endcomment %}
+
+{% block form %}
+  <tr>
+   <td colspan="4">
+    <h3 style="font-size: 16px;">Ad Information</h3>
+   </td>
+  </tr>
+  <tr>
+   <th class="th-left">{{ form.jobcategory.label_tag }} : <div class="helptext">{{ form.jobcategory.help_text }}</div></th>
+   <td>
+    {% if form.jobcategory.errors %}<ul class="errorlist">{{ form.jobcategory.errors }}</ul>{% endif %}
+    {{ form.jobcategory }}{% if form.jobcategory.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+
+   </td>
+
+   <th class="th-right">{{ form.companyname.label_tag }} : <div class="helptext">{{ form.companyname.help_text }}</div></th>
+   <td>
+    {% if form.companyname.errors %}<ul class="errorlist">{{ form.companyname.errors }}</ul>{% endif %}
+    {{ form.companyname }}
+    {% if form.title.companyname.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+  <tr>
+   <th class="th-left">{{ form.title.label_tag }} : <div class="helptext">{{ form.title.help_text }}</div></th>
+   <td colspan="3">
+    {% if form.title.errors %}<ul class="errorlist">{{ form.title.errors }}</ul>{% endif %}
+    {{ form.title }}
+    {% if form.title.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+  <tr>
+   <th class="th-left">{{ form.jobcity.label_tag }} : <div class="helptext">{{ form.jobcity.help_text }}</div></th>
+   <td colspan="3">
+    {% if form.jobcity.errors %}<ul class="errorlist">{{ form.jobcity.errors }}</ul>{% endif %}
+    {{ form.jobcity }}
+    {% if form.jobcity.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+  <tr>
+   <th class="th-left">{{ form.jobstatus.label_tag }} : <div class="helptext">{{ form.jobstatus.help_text }}</div></th>
+   <td>
+    {% if form.jobstatus.errors %}<ul class="errorlist">{{ form.jobstatus.errors }}</ul>{% endif %}
+    {{ form.jobstatus }}
+    {% if form.jobstatus.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  
+   <th class="th-right">{{ form.joblocation.label_tag }} : <div class="helptext">{{ form.joblocation.help_text }}</div></th>
+   <td>
+    {% if form.joblocation.errors %}<ul class="errorlist">{{ form.joblocation.errors }}</ul>{% endif %}
+    {{ form.joblocation }}
+    {% if form.joblocation.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+  <tr>
+   <th>{{ form.description.label_tag }} : <div class="helptext">{{ form.description.help_text }}</div></th>
+   <td colspan="3">
+    {% if form.description.errors %}<ul class="errorlist">{{ form.description.errors }}</ul>{% endif %}
+    {{ form.description }}
+    {% if form.description.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+  <tr>
+   <th>{{ form.qualifications.label_tag }} : <div class="helptext">{{ form.qualifications.help_text }}</div></th>
+   <td colspan="3">
+    {% if form.qualifications.errors %}<ul class="errorlist">{{ form.qualifications.errors }}</ul>{% endif %}
+    {{ form.qualifications }}
+    {% if form.qualifications.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+  <tr>
+   <th style="font-size: 16px;">Apply To</th>
+   <td colspan="3"> NOTE: Please <span style="text-decoration: underline;">only</span> enter information that you want to appear in your ad for applicant submissions.
+   </td>
+  </tr>
+  <tr>
+   <th class="th-left">{{ form.contactcompanyname.label_tag }} : <div class="helptext">{{ form.contactcompanyname.help_text }}</div></th>
+   <td>
+    {% if form.contactcompanyname.errors %}<ul class="errorlist">{{ form.contactcompanyname.errors }}</ul>{% endif %}
+    {{ form.contactcompanyname }}
+    {% if form.contactcompanyname.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  
+   <th class="th-right">{{ form.attn.label_tag }} : <div class="helptext">{{ form.attn.help_text }}</div></th>
+   <td>
+    {% if form.attn.errors %}<ul class="errorlist">{{ form.attn.errors }}</ul>{% endif %}
+    {{ form.attn }}
+    {% if form.attn.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+
+<tr>
+   <th class="th-left">{{ form.address.label_tag }} : <div class="helptext">{{ form.address.help_text }}</div></th>
+   <td>
+    {% if form.address.errors %}<ul class="errorlist">{{ form.address.errors }}</ul>{% endif %}
+    {{ form.address }}
+    {% if form.address.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  
+   <th class="th-right">{{ form.phone.label_tag }} : <div class="helptext">{{ form.phone.help_text }}</div></th>
+   <td>
+    {% if form.phone.errors %}<ul class="errorlist">{{ form.phone.errors }}</ul>{% endif %}
+    {{ form.phone }}
+    {% if form.phone.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+<tr>
+   <th class="th-left">{{ form.city.label_tag }} : <div class="helptext">{{ form.city.help_text }}</div></th>
+   <td>
+    {% if form.city.errors %}<ul class="errorlist">{{ form.city.errors }}</ul>{% endif %}
+    {{ form.city }}
+    {% if form.city.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  
+   <th class="th-right">{{ form.fax.label_tag }} : <div class="helptext">{{ form.fax.help_text }}</div></th>
+   <td>
+    {% if form.fax.errors %}<ul class="errorlist">{{ form.fax.errors }}</ul>{% endif %}
+    {{ form.fax }}
+    {% if form.fax.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+  <tr>
+   <th class="th-left">{{ form.state.label_tag }} : <div class="helptext">{{ form.state.help_text }}</div></th>
+   <td>
+    {% if form.state.errors %}<ul class="errorlist">{{ form.state.errors }}</ul>{% endif %}
+    {{ form.state }}
+    {% if form.state.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  
+   <th class="th-right">{{ form.contactemail.label_tag }} : <div class="helptext">{{ form.contactemail.help_text }}</div></th>
+   <td>
+    {% if form.contactemail.errors %}<ul class="errorlist">{{ form.contactemail.errors }}</ul>{% endif %}
+    {{ form.contactemail }}
+    {% if form.contactemail.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+<tr>
+ <th class="th-left">{{ form.zip_Code.label_tag }} : <div class="helptext">{{ form.zip_Code.help_text }}</div></th>
+   <td colspan="3">
+    {% if form.zip_Code.errors %}<ul class="errorlist">{{ form.zip_Code.errors }}</ul>{% endif %}
+    {{ form.zip_Code }}
+    {% if form.zip_Code.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+   </td>
+  </tr>
+<tr>
+   <th class="th-right">{{ form.website.label_tag }} : </th>
+   <td colspan="3">
+    {% if form.website.errors %}<ul class="errorlist">{{ form.website.errors }}</ul>{% endif %}
+    http://www.{{ form.website }}
+    {% if form.website.field.required %}<img src="{{ MEDIA_URL }}images/required.png" alt="Required" width="8" height="8" />{% endif %}
+    <div class="helptext">{{ form.website.help_text }}</div>
+   </td>
+  </tr>
+
+{% endblock %}
+

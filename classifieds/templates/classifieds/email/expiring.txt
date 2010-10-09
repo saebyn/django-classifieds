@@ -1,0 +1,11 @@
+{% comment %}
+  $Id$
+{% endcomment %}
+
+Hello {{ posting.user.first_name }},
+
+Your {{ posting.category.name }} posting will expire in {{ posting.expires_on|timeuntil }}
+unless you renew it. You can renew your ad here: {% url payment.views.checkout posting.pk %} .
+
+-- The {{ posting.category.site.name }} Team
+

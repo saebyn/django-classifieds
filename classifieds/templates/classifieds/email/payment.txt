@@ -1,0 +1,11 @@
+{% comment %}
+  $Id$
+{% endcomment %}
+
+Hello {{ payment.ad.user.first_name }},
+
+Your payment for {{ payment.amount }} for your {{ payment.ad.category.name }} posting 
+titled '{{ payment.ad.title }}' has been processed. Your ad will expire in {{ payment.ad.expires_on|timeuntil }}.
+
+-- The {{ ad.category.site.name }} Team
+

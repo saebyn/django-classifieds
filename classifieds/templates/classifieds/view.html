@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% comment %}
+  $Id$
+{% endcomment %}
+
+{% load humanize %}
+
+{% block head %}
+ <script type="text/javascript" src="{{ MEDIA_URL }}js/thumbnails.js"></script>
+{% endblock %}
+
+{% block content %}
+ {% block ad_create_status %}
+  {% if create %}
+   <h1>Post Ad</h1>
+   <ol class="progress">
+    <li>1 | Select</li>
+    <li>2 | Post</li>
+    <li class="selected">3 | Review</li>
+    <li>4 | Checkout</li>
+   </ol>
+   <p><strong>Step 3 :</strong> Please review your post below</p>
+  {% endif %}
+ {% endblock %}
+ 
+ {% if ad.expired %}
+ <h3>This ad has expired</h3>
+ {% endif %}
+
+ {% block ad %}
+
+<div class="ad-view">
+ <div class="options">
+  <a href="{% url classifieds.views.search_results ad.category.pk %}">&lt; Back to Results</a>&nbsp;|&nbsp;<a href="{% url contact.views.contact_ad ad.pk %}">Contact Info</a>
+ </div>
+
+ <div class="title">{{ ad.title }}</div>
+
+ {% if ad.fields_dict.price %}
+ <div class="price">${{ ad.fields_dict.price|intcomma }}</div>
+ {% endif %}
+
+ <div class="id">
+  <span class="label">ID :</span> {{ ad.pk }}<br />
+  <span class="label">Posted on :</span> {{ ad.created_on|date:"F jS, Y" }}
+ </div>
+ 
+ {% if ad.fields_dict.city and ad.fields_dict.state and ad.fields_dict.zip_code %}
+ <div class="location">{{ ad.fields_dict.city }},{{ ad.fields_dict.state }} {{ ad.fields_dict.zip_code }}</div>
+ {% else %}
+  {% if ad.fields_dict.zip_code %}
+ <div class="location">{{ ad.fields_dict.zip_code }}</div>
+  {% endif %}
+ {% endif %}
+ 
+ {% if ad.fields_dict.description %}
+ <div class="description">
+  <h2>Description :</h2>
+  {{ ad.fields_dict.description }}
+ </div>
+ {% endif %}
+
+ <div class="images">
+ {% for image in ad.adimage_set.all %}
+  {% if image.get_thumb_photo_url %}
+   <a href="{{ image.get_full_photo_url }}"><img src="{{ image.get_thumb_photo_url }}" alt="Thumbnail" class="thumbnail" /></a>
+  {% endif %}
+ {% endfor %}
+ </div>
+</div>
+ {% endblock %}
+ {% block preview_next %}
+  {% if create %}
+   <div style="height: 100px;">
+    <a class="button" style="margin-left: 73px; margin-right: 10px; float: left;" href="{% url classifieds.views.create_edit ad.pk %}">Edit Ad</a>
+    <a class="button" style="float: left;" href="{% url classifieds.views.checkout ad.pk %}">Continue</a>
+   </div>
+  {% endif %}
+ {% endblock %}
+{% endblock %}
+
+{% block tellafriend %}http://{{ site.domain }}/ads/{{ ad.pk }}{% endblock %}
