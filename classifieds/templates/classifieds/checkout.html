@@ -4,7 +4,10 @@
 {% endcomment %}
 
 {% block head %}
- <script type="text/javascript" src="{% url classifieds.views.pricing %}"></script>
+ <script type="text/javascript" src="{% url classifieds.views.create.pricing %}"></script>
+{% endblock %}
+
+{% block masterheader %}
 {% endblock %}
 
 {% block content %}
@@ -21,7 +24,7 @@
  
 <p>Checkout page for posting titled "{{ ad.title }}" (Ad Id: {{ ad.pk }}) in the {{ ad.category.name }} category.</p>
 
-<form method="post" action="{% url classifieds.views.checkout ad.pk %}">
+<form method="post" action="{% url classifieds.views.create.checkout ad.pk %}">
  <table>
   {{ form }}
   <tr>
@@ -34,5 +37,6 @@
  </p>
 </form>
 <br /><br /><br /><br />
-<a class="abort-checkout" onclick="return confirm('Are you sure?');" href="{% url classifieds.views.mine %}">Exit / Delete</a>
+<a class="abort-checkout" onclick="return confirm('Are you sure?');" href="{% url classifieds.views.manage.mine %}">Exit / Delete</a>
+
 {% endblock %}

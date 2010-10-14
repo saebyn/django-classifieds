@@ -13,8 +13,8 @@
 </ul>
 <div class="welcome">Welcome, <span class="name">{{ user.first_name }}</span></div>
 <ul class="arrow">
- <li><a href="{% url classifieds.views.create %}">Post a New Ad</a></li>
- <li><a href="{% url classifieds.views.mine %}">Manage My Ads</a></li>
+ <li><a href="{% url classifieds.views.create.select_category %}">Post a New Ad</a></li>
+ <li><a href="{% url classifieds.views.manage.mine %}">Manage My Ads</a></li>
  <li><a href="{% url profiles_edit_profile %}">My Profile</a></li>
  <li><a href="{% url django.contrib.auth.views.logout %}">Logout</a></li>
 </ul>

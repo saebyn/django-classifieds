@@ -11,7 +11,7 @@ Here are the latest postings from the last 24 hours.
  
  {{ posting.fields_dict.description }}
  
- http://{{site.domain}}{{ url classifieds.views.view posting.pk }}
+ http://{{site.domain}}{{ url classifieds.views.browse.view posting.pk }}
  
  ------------------------------------------------------------------------------
 {% endfor %}

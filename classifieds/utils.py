@@ -6,7 +6,6 @@ from PIL import Image
 import string
 
 from django.shortcuts import render_to_response
-from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 
