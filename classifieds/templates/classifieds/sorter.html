@@ -1,0 +1,34 @@
+{% load extras %}
+ <div class="sorter">
+  <div style="float: left;">
+   <form method="get" action="{{ request.path }}" id="perpage" style="display: inline;">
+    <p style="display: inline;">
+     Display 
+     <input type="hidden" name="page" value="{{ page.number }}" />
+     <input type="hidden" name="sort" value="{{ request.GET.sort }}" />
+     <input type="hidden" name="order" value="{{ request.GET.sort }}" />
+     <select name="perpage" onchange="document.getElementById('perpage').submit();">
+      <option value="{{ perpage }}">{{ perpage }}</option>
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+     </select>
+     ads per page.
+    </p>
+   </form>
+  </div>
+  {% if sortfields %}
+   Sort by:&nbsp;
+   {% for sort in sortfields %}
+    <a href="{{ request.path }}?page={{ page.number }}&amp;sort={{ sort }}&amp;order={% ifequal request.GET.order "asc" %}desc{% else %}asc{% endifequal %}&amp;perpage={{ perpage }}">{{ sort|sortname }}</a>
+    {% ifequal request.GET.sort sort %}
+     {% ifequal request.GET.order "asc" %}
+     Ascending
+     {% else %}
+     Decending
+     {% endifequal %}
+    {% endifequal %}
+    {% if forloop.last %}{% else %}&nbsp;|&nbsp;{% endif %}
+   {% endfor %}
+  {% endif %}
+ </div>

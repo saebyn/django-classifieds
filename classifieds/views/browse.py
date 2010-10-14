@@ -28,13 +28,14 @@ def search(request):
   # list categories available and send the user to the search_in_category view
   return render_to_response('classifieds/category_choice.html', {'categories': Category.objects.all(), 'type': 'search'}, context_instance=RequestContext(request))
 
-def search_in_category(request, categoryId):
+def search_in_category(request, slug):
+  # reset the search params, if present
   try:
     del request.session['search']
   except KeyError:
     pass
   
-  return search_results(request, categoryId)
+  return search_results(request, slug)
 
 def prepare_sforms(fields, fields_left, post=None):
   sforms = []
@@ -59,8 +60,8 @@ def prepare_sforms(fields, fields_left, post=None):
   
   return sforms
 
-def search_results(request, categoryId):
-  cat = get_object_or_404(Category, pk=categoryId)
+def search_results(request, slug):
+  cat = get_object_or_404(Category, slug=slug)
   fields = list(cat.field_set.all())
   fields += list(Field.objects.filter(category=None))
   fieldsLeft = [field.name for field in fields]

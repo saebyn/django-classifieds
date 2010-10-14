@@ -22,7 +22,7 @@
 {% block content %}
 
  {% if page.object_list %}
-  {% include "sorter.html" %}
+  {% include "classifieds/sorter.html" %}
   <div class="ads">
   {% for ad in page.object_list %}
    <div class="ad{% if forloop.first %} first{% endif %}{% if ad.is_featured %} featured{% endif %}">
@@ -60,7 +60,7 @@
   {% endfor %}
   </div>
  
-  {% include "pager.html" %} 
+  {% include "classifieds/pager.html" %} 
  {% else %}
   <p>You don't have any ads. Post a new ad <a href="{% url classifieds.views.create.select_category %}">here</a>.
  {% endif %}

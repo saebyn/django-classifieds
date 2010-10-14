@@ -4,13 +4,14 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.template import Context, loader, RequestContext
-from django.conf import settings as django_settings
+from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
 from django.http import HttpResponseRedirect
+from django.conf import settings as django_settings
 
 from paypal.standard.forms import PayPalPaymentsForm
 
-from classifieds.models import Ad, Category, Pricing, PricingOptions
+from classifieds.models import Ad, Category, Pricing, PricingOptions, AdImage
 from classifieds.forms import CheckoutForm
 from classifieds.adform import AdForm
 from classifieds.utils import clean_adimageformset, render_category_page
@@ -35,16 +36,17 @@ def select_category(request):
   return render_to_response('classifieds/category_choice.html', {'categories': Category.objects.all(), 'type': 'create'}, context_instance=RequestContext(request))
 
 @login_required
-def create_in_category(request, categoryId):
+def create_in_category(request, slug):
   # validate categoryId
-  category = get_object_or_404(Category, pk=categoryId)
+  category = get_object_or_404(Category, slug=slug)
 
   ad = Ad.objects.create(category=category, user=request.user, expires_on=datetime.datetime.now(), active=False)
   ad.save()
-  return edit(request, ad.pk)
+  return HttpResponseRedirect(reverse('classifieds.views.create.edit', args=[ad.pk]))
 
 @login_required
 def edit(request, adId):
+  # get the specified ad, only if it's not active and this user owns it.
   ad = get_object_or_404(Ad, pk=adId, active=False, user=request.user)
   
   image_count = ad.category.images_max_count
@@ -55,7 +57,6 @@ def edit(request, adId):
   if request.method == 'POST':
     imagesformset = ImageUploadFormSet(request.POST, request.FILES, instance=ad)
     form = AdForm(ad, request.POST)
-    #raise str(str(form.errors))
     if form.is_valid():# and imagesformset.is_valid():
       ad = form.save()
       if imagesformset.is_valid():

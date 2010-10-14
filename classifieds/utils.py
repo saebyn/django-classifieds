@@ -70,28 +70,28 @@ def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
 
   if sort in ['created_on', 'expires_on', 'category', 'title']:
     ads_sorted = ads.extra(select={'featured': """SELECT 1
-FROM `payment_payment_options`
-LEFT JOIN `payment_payment` ON `payment_payment_options`.`payment_id` = `payment_payment`.`id`
-LEFT JOIN `classifieds_pricing` ON `classifieds_pricing`.`id` = `payment_payment`.`pricing_id`
-LEFT JOIN `classifieds_pricingoptions` ON `payment_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
+FROM `classifieds_payment_options`
+LEFT JOIN `classifieds_payment` ON `classifieds_payment_options`.`payment_id` = `classifieds_payment`.`id`
+LEFT JOIN `classifieds_pricing` ON `classifieds_pricing`.`id` = `classifieds_payment`.`pricing_id`
+LEFT JOIN `classifieds_pricingoptions` ON `classifieds_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
 WHERE `classifieds_pricingoptions`.`name` = %s
-AND `payment_payment`.`ad_id` = `classifieds_ad`.`id`
-AND `payment_payment`.`paid` =1
-AND `payment_payment`.`paid_on` < NOW()
-AND DATE_ADD( `payment_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
+AND `classifieds_payment`.`ad_id` = `classifieds_ad`.`id`
+AND `classifieds_payment`.`paid` =1
+AND `classifieds_payment`.`paid_on` < NOW()
+AND DATE_ADD( `classifieds_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
 DAY ) > NOW()"""}, select_params=[PricingOptions.FEATURED_LISTING]).extra(order_by=['-featured', order + sort])
   else:
     # sometimes I surprise myself
     ads_sorted = ads.extra(select=SortedDict( [('fvorder', 'select value from classifieds_fieldvalue LEFT JOIN classifieds_field on classifieds_fieldvalue.field_id = classifieds_field.id where classifieds_field.name = %s and classifieds_fieldvalue.ad_id = classifieds_ad.id'), ('featured', """SELECT 1
-FROM `payment_payment_options`
-LEFT JOIN `payment_payment` ON `payment_payment_options`.`payment_id` = `payment_payment`.`id`
-LEFT JOIN `classifieds_pricing` ON `classifieds_pricing`.`id` = `payment_payment`.`pricing_id`
-LEFT JOIN `classifieds_pricingoptions` ON `payment_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
+FROM `classifieds_payment_options`
+LEFT JOIN `classifieds_payment` ON `classifieds_payment_options`.`payment_id` = `classifieds_payment`.`id`
+LEFT JOIN `classifieds_pricing` ON `classifieds_pricing`.`id` = `classifieds_payment`.`pricing_id`
+LEFT JOIN `classifieds_pricingoptions` ON `classifieds_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
 WHERE `classifieds_pricingoptions`.`name` = %s
-AND `payment_payment`.`ad_id` = `classifieds_ad`.`id`
-AND `payment_payment`.`paid` =1
-AND `payment_payment`.`paid_on` < NOW()
-AND DATE_ADD( `payment_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
+AND `classifieds_payment`.`ad_id` = `classifieds_ad`.`id`
+AND `classifieds_payment`.`paid` =1
+AND `classifieds_payment`.`paid_on` < NOW()
+AND DATE_ADD( `classifieds_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
 DAY ) > NOW()""")] ), select_params=[sort, PricingOptions.FEATURED_LISTING]).extra(order_by = ['-featured', order + 'fvorder'])
   
   pager = Paginator(ads_sorted, perpage)

@@ -1,0 +1,37 @@
+<div class="pager">
+ {% if page.has_other_pages %}
+ <div class="pages">
+  {% ifnotequal page.start_index 1 %}
+   <a href="{{ request.path }}?sort={{ request.GET.sort }}&amp;order={{ request.GET.order }}&amp;page=1&amp;perpage={{ perpage }}">|&lt;&lt;</a>
+  {% endifnotequal %}
+
+  {% if page.has_previous %}
+   <a href="{{ request.path }}?sort={{ request.GET.sort }}&amp;order={{ request.GET.order }}&amp;page={{ page.previous_page_number }}&amp;perpage={{ perpage }}">&lt;</a>
+  {% endif %}
+  
+  &nbsp;
+  {% for page_number in page.paginator.page_range %}
+    {% if not forloop.first %}
+    |
+    {% endif %}
+    {% ifequal page_number page.number %}
+    <span style="color: red;">{{ page_number }}</span>
+    {% else %}
+    ;{{ page_number }}
+    {% endifequal %}
+  {% endfor %}
+  &nbsp;
+
+  {% if page.has_next %}
+   <a href="{{ request.path }}?sort={{ request.GET.sort }}&amp;order={{ request.GET.order }}&amp;page={{ page.next_page_number }}&amp;perpage={{ perpage }}">&gt;</a>
+  {% endif %}
+
+  {% ifnotequal page.end_index page.paginator.count %}
+   <a href="{{ request.path }}?sort={{ request.GET.sort }}&amp;order={{ request.GET.order }}&amp;page={{ page.paginator.num_pages }}&amp;perpage={{ perpage }}">&gt;&gt;|</a>
+  {% endifnotequal %}
+ </div>
+ {% endif %}
+
+ Viewing {{ page.start_index }}-{{ page.end_index }} of {{ page.paginator.count }}
+</div>
+

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p class="errorlist">Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<form method="post" action="#">
+ <table>
+  <tr><th><label for="id_username">Username : </label></th><td>{{ form.username }}</td></tr>
+  <tr><th><label for="id_password">Password : </label></th><td>{{ form.password }} <a href="{% url auth_password_reset %}">Forgot?</a></td></tr>
+  <tr style="text-align: right;"><td colspan="2"><a href="{% url registration_register %}">Register</a><input type="submit" value="Login" class="submit" /></td></tr>
+ </table>
+ <p>
+   Note: By logging in, you agree to the<br /><a href="/termsofuse/" style="padding: 0px;" target="_blank" onclick="window.open('/termsofuse/basic/', 'Terms of Use', 'width=800,height=600,scrollbars=1'); return false;">Terms of Use</a> and <a href="/privacypolicy/" style="padding: 0px;" target="_blank" onclick="window.open('/privacypolicy/basic/', 'Privacy Policy', 'width=800,height=600,scrollbars=1'); return false;">Privacy Policy</a>.
+  <input type="hidden" name="next" value="{{ next }}" />
+ </p>
+{% csrf_token %}
+</form>
+{% endblock %}
+

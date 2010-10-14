@@ -8,15 +8,10 @@
 
 <div class="head">
  <span id="jobId">Ad Id : {{ ad.pk }}</span>
- <h2 style="margin: 0px; font-size: 16px;">{{ ad.title }}</h2>
-  <h3>Business Type: {{ ad.fields_dict.businesstype }}</h3>
-  <h4>Location: {% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}</h4>
+ <h2>{{ ad.title }}</h2>
 </div>
 
 <p id="aboveSidebarView">Posted On : {{ ad.created_on|date:"F dS, Y" }}</p>
-
-
- <p>Asking Price : ${{ ad.fields_dict.price|intcomma }}</p>
 
 <div id="sidebarView">
  <p class="head">Contact Information</p>

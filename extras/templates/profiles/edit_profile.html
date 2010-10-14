@@ -1,0 +1,13 @@
+{% extends "adposting/manage.html" %}
+
+{% block content %}
+<h1>Profile</h1>
+<form method="post" action="#">
+ <table>
+  {{ form }}
+  <tr>
+   <td colspan="2"><input type="submit" class="submit" value="Update" /></td>
+  </tr>
+ </table>
+</form>
+{% endblock %}

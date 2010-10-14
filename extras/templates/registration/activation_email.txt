@@ -1,0 +1,8 @@
+Hello {{ user.username }},
+
+Welcome to {{ site.name }}! Please go to this URL in order to activate your
+account: http://{{ site.domain_name }}{% url registration_activate
+activation_key %} .
+
+-- The {{ site.name }} Team
+

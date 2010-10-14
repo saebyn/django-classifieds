@@ -33,7 +33,7 @@
 
 <div class="ad-view">
  <div class="options">
-  <a href="{% url classifieds.views.search_results ad.category.pk %}">&lt; Back to Results</a>&nbsp;|&nbsp;<a href="{% url contact.views.contact_ad ad.pk %}">Contact Info</a>
+  <a href="{% url classifieds.views.browse.search_results ad.category.pk %}">&lt; Back to Results</a>&nbsp;|&nbsp;<a href="{% url contact.views.contact_ad ad.pk %}">Contact Info</a>
  </div>
 
  <div class="title">{{ ad.title }}</div>
@@ -74,8 +74,8 @@
  {% block preview_next %}
   {% if create %}
    <div style="height: 100px;">
-    <a class="button" style="margin-left: 73px; margin-right: 10px; float: left;" href="{% url classifieds.views.create_edit ad.pk %}">Edit Ad</a>
-    <a class="button" style="float: left;" href="{% url classifieds.views.checkout ad.pk %}">Continue</a>
+    <a class="button" style="margin-left: 73px; margin-right: 10px; float: left;" href="{% url classifieds.views.create.edit ad.pk %}">Edit Ad</a>
+    <a class="button" style="float: left;" href="{% url classifieds.views.create.checkout ad.pk %}">Continue</a>
    </div>
   {% endif %}
  {% endblock %}
