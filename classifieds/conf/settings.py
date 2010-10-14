@@ -2,7 +2,7 @@
 from django.conf import settings
 
 def setting(name, default):
-   getattr(settings, 'CLASSIFIEDS_' + name, default)
+   return getattr(settings, 'CLASSIFIEDS_' + name, default)
  
 
 NOTICE_ENABLED = setting('NOTICE_ENABLED', False)
