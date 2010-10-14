@@ -3,24 +3,34 @@
 """
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('classifieds.views',
-  (r'^$', 'index'),
+# nested urls
+base_urlpatterns = patterns('classifieds.views',
+  (r'^$', 'front_page'),
+  (r'^post/$', 'index'),
   (r'^create/$', 'create'),
-  (r'^create/([0-9]+)/$', 'create_in_category'),
-  (r'^create/edit/([0-9]+)/$', 'create_edit'),
-  (r'^create/preview/([0-9]+)/$', 'create_preview'),
+  (r'^create/([-\w]+)/$', 'create_in_category'),
+  (r'^create/edit/([-\w]+)/$', 'create_edit'),
+  (r'^create/preview/([-\w]+)/$', 'create_preview'),
   (r'^search/$', 'search'),
-  (r'^search/([0-9]+)/$', 'search_in_category'),
-  (r'^search_results/([0-9]+)/$', 'search_results'),
+  (r'^search/([-\w]+)/$', 'search_in_category'),
+  (r'^search_results/([-\w]+)/$', 'search_results'),
+  (r'^([0-9]+)/$', 'view'),
+)
+
+# local-based urls coming soon
+urlpatterns = base_urlpatterns
+
+# top-level urls
+urlpatterns += patterns('classifieds.views',
   (r'^mine/$', 'mine'),
   (r'^edit/([0-9]+)/$', 'edit'),
   (r'^delete/([0-9]+)/$', 'delete'),
-  (r'^([0-9]+)/$', 'view'),
   (r'^new/([0-9]+)/$', 'view_bought'),
   (r'^checkout/([0-9]+)$', 'checkout'),
   (r'^pricing$', 'pricing'),
   (r'^notify$', 'notify'),
   (r'^notify_complete$', 'notify_complete'),
+  (r'^contact/([0-9]+)$', 'contact_seller'),
 )
 
 from sitemaps import sitemaps

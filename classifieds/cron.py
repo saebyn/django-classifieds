@@ -11,13 +11,12 @@ from django.core.mail import send_mass_mail
 from django.contrib.sites.models import Site
 
 from classifieds.models import Ad
-
-from options import from_email, notice_posting_new, notice_posting_expires
+from classifieds.conf.settings import FROM_EMAIL, NOTICE_POSTING_NEW, NOTICE_POSTING_EXPIRES
 
 import datetime
 
 def run():
-	yesterday = datetime.datetime.today() - datetime.timedelta(days=int(notice_posting_new()))
+	yesterday = datetime.datetime.today() - datetime.timedelta(days=NOTICE_POSTING_NEW)
 	postings = Ad.objects.filter(created_on__gt=yesterday)
 	
 	# get subscriber list
@@ -32,7 +31,7 @@ def run():
 		email_contents = email_template.render(context)
 		emails.append( (_('New ads posted on ') + Site.objects.get_current().name,
 		                email_contents,
-		                from_email(),
+		                FROM_EMAIL,
 		                [subscriber.email],
 		               )
 		             )
@@ -40,7 +39,7 @@ def run():
 	# 2. send emails
 	send_mass_mail(emails)
 	
-	tomorrow = datetime.datetime.today() + datetime.timedelta(days=int(notice_posting_expires()))
+	tomorrow = datetime.datetime.today() + datetime.timedelta(days=NOTICE_POSTING_EXPIRES)
 	expiring_postings = Ad.objects.filter(expires_on__lt=tomorrow)
 	emails = []
 	
@@ -51,7 +50,7 @@ def run():
 		email_contents = email_template.render(context)
 		emails.append( (_('Your ad on ') + Site.objects.get_current().name + _(' is about to expire.'),
 		                email_contents,
-		                from_email(),
+		                FROM_EMAIL,
 		                [posting.user.email],
 		               )
 		             )
@@ -60,7 +59,7 @@ def run():
 	send_mass_mail(emails)
 	
 	# delete old ads
-	yesterday = datetime.datetime.today() - datetime.timedelta(days=int(notice_posting_expires()))
+	yesterday = datetime.datetime.today() - datetime.timedelta(days=NOTICE_POSTING_EXPIRES)
 	Ad.objects.filter(expires_on__lt=yesterday).delete()
 
 if __name__ == '__main__':

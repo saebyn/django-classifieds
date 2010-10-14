@@ -25,9 +25,8 @@ from django.forms.util import ErrorList
 from django.forms import BaseForm
 from django import forms
 
-from django.conf import settings
-
-from models import Field, FieldValue
+from classifieds.conf import settings
+from classifieds.models import Field, FieldValue
 
 __all__ = ('AdForm',)
 
@@ -233,7 +232,7 @@ class AdForm(BaseForm):
 				value = unicode(cleaned_data[field.name])
 		
 			# strip words in settings.FORBIDDEN_WORDS
-			for word in settings.FORBIDDEN_WORDS.split(','):
+			for word in settings.FORBIDDEN_WORDS:
 				value = value.replace(word, '')
 			
 			# title is stored directly in the ad, unlike all other editable fields

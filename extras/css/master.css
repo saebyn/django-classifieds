@@ -19,7 +19,7 @@ a:active {
   position: absolute;
   right: 100px;
   top: 0px;
-  height: 35px;
+  height: 24px;
   padding: 5px 10px;
   
   background-color: #3b63a6;
@@ -79,6 +79,7 @@ ul.commands li a img {
   background-color: #FAD848;
   height: 19px;
   padding: 8px 50px 8px 0px;
+  margin-bottom: 40px;
   text-align: right;
 }
 
@@ -89,22 +90,13 @@ ul.commands li a img {
   font-weight: bold;
 }
 
-#copyright {
-  clear: both;
-  background-color: #bca858;
-  height: 35px;
-  padding-top: 10px;
-  overflow: hidden;
-  text-align: center;
-}
-
 #footer {
   background-color: #40577D;
-}
-
-#footer ul {
   height: 140px;
-  margin: 5px 0px 0px 80px;
+  text-align: center;
+  clear: both;
+  overflow: hidden;
+  color: white;
 }
 
 #sidebar {
@@ -221,3 +213,33 @@ ul.commands li a img {
   padding: 3px;
 }
 
+ol.progress {
+  margin-bottom: 15px;
+}
+
+ol.progress li {
+  font-size: 120%;
+  display: inline;
+  margin-left: 10px;
+  padding-left: 15px;
+  list-style: none;
+}
+
+ol.progress li.selected {
+  font-weight: bold;
+}
+
+ul.category-list li {
+  margin-bottom: 20px;
+}
+
+ul.category-list li span {
+  float: right;
+  display: inline;
+  width: 263px;
+}
+
+ul.category-list a.button {
+  margin-top: 0px;
+  width: 200px;
+}

@@ -13,24 +13,24 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 
 from django.template import Context, loader, RequestContext
 
-from django.conf import settings
+from django.conf import settings as django_settings
 
 from django import forms
 from django.forms.models import inlineformset_factory
 
 # classifieds internal modules
-from models import Ad, Field, Category, AdImage, Pricing, PricingOptions
-from adform import AdForm
-
-from search import *
-from utils import clean_adimageformset, context_sortable
+from classifieds.models import Ad, Field, Category, AdImage, Pricing, PricingOptions
+from classifieds.adform import AdForm
+from classifieds.search import *
+from classifieds.utils import clean_adimageformset, context_sortable, render_category_page
+from classifieds.conf import settings
 
 def front_page(request):
   context = {}
   categories = Category.objects.all().order_by('sort_order')
   context['topcategories'] = categories[:3]
   context['subcategories'] = categories[3:6]
-  return render_to_response('classifieds/front_page.html', context, context_instance=RequestContext(request))
+  return render_to_response('classifieds/category_overview.html', context, context_instance=RequestContext(request))
 
 def index(request):
   if request.user.is_authenticated() and request.user.is_active:
@@ -52,7 +52,7 @@ def delete(request, adId):
   
   # make sure that only the owner of the ad can delete it
   if request.user != ad.user:
-    return HttpResponseRedirect('%s?%s=%s' % (settings.LOGIN_URL, REDIRECT_FIELD_NAME, urlquote(request.get_full_path())))
+    return HttpResponseRedirect('%s?%s=%s' % (django_settings.LOGIN_URL, REDIRECT_FIELD_NAME, urlquote(request.get_full_path())))
   
   ad.delete()
   
@@ -69,7 +69,7 @@ def edit(request, adId):
   
   # make sure that only the owner of the ad can edit it
   if request.user != ad.user:
-    return HttpResponseRedirect('%s?%s=%s' % (settings.LOGIN_URL, REDIRECT_FIELD_NAME, urlquote(request.get_full_path())))
+    return HttpResponseRedirect('%s?%s=%s' % (django_settings.LOGIN_URL, REDIRECT_FIELD_NAME, urlquote(request.get_full_path())))
 
   image_count = ad.category.images_max_count
   ImageUploadFormSet = inlineformset_factory(Ad, AdImage, extra=image_count, max_num=image_count, fields=('full_photo',))
@@ -90,7 +90,10 @@ def edit(request, adId):
     imagesformset = ImageUploadFormSet(request.POST, request.FILES, instance=ad)
     form = AdForm(ad)
   
-  return render_to_response('classifieds/category/' + ad.category.template_prefix + '/edit.html', {'form': form, 'imagesformset': imagesformset, 'ad': ad}, context_instance=RequestContext(request))
+  return render_category_page(request, ad.category, 'edit.html',
+                              {'form': form, 
+                               'imagesformset': imagesformset, 
+                               'ad': ad})
 
 def view(request, adId):
   # find the ad, if available
@@ -99,7 +102,7 @@ def view(request, adId):
   if ad.expires_on < datetime.datetime.now() and ad.user != request.user:
     raise Http404
   
-  return render_to_response('classifieds/category/' + ad.category.template_prefix + '/view.html', {'ad': ad}, context_instance=RequestContext(request))
+  return render_category_page(request, ad.category, 'view.html', {'ad': ad})
 
 @login_required
 def view_bought(request, adId):
@@ -146,14 +149,19 @@ def create_edit(request, adId):
     imagesformset = ImageUploadFormSet(instance=ad)
     form = AdForm(ad)
   
-  return render_to_response('classifieds/category/' + ad.category.template_prefix + '/edit.html', {'form': form, 'imagesformset': imagesformset, 'ad': ad, 'create': True}, context_instance=RequestContext(request))
+  return render_category_page(request, ad.category, 'edit.html',
+                              {'form': form, 
+                               'imagesformset': imagesformset, 
+                               'ad': ad, 
+                               'create': True})
   
 
 @login_required
 def create_preview(request, adId):
   ad = get_object_or_404(Ad, pk=adId, active=False, user=request.user)
   
-  return render_to_response('classifieds/category/' + ad.category.template_prefix + '/preview.html', {'ad': ad, 'create': True}, context_instance=RequestContext(request))
+  return render_category_page(request, ad.category, 'preview.html',
+                              {'ad': ad, 'create': True})
 
 def search(request):
   # list categories available and send the user to the search_in_category view
@@ -265,12 +273,20 @@ def checkout(request, adId):
       email_template = loader.get_template('classifieds/email/posting.txt')
       context = Context({'ad': ad})
       email_contents = email_template.render(context)
+
       # 2. send email
-      send_mail(_('Your ad will be posted shortly.'), email_contents, settings.FROM_EMAIL, [ad.user.email], fail_silently=False)
+      send_mail(_('Your ad will be posted shortly.'),
+                email_contents, 
+                settings.FROM_EMAIL, 
+                [ad.user.email], 
+                fail_silently=False)
       
       item_name = _('Your ad on ') + Site.objects.get_current().name 
-      paypal_values = {'amount': total, 'item_name': item_name, 'item_number': payment.pk, 'quantity': 1}
-      if settings.DEBUG:
+      paypal_values = {'amount': total,
+                       'item_name': item_name, 
+                       'item_number': payment.pk, 
+                       'quantity': 1}
+      if django_settings.DEBUG:
         paypal_form = PayPalPaymentsForm(initial=paypal_values).sandbox()
       else:
         paypal_form = PayPalPaymentsForm(initial=paypal_values).render()
@@ -306,3 +322,5 @@ def notify(request):
 
   return render_to_response('classifieds/notify.html', {'form': form}, context_instance=RequestContext(request))
 
+def contact_seller(request, adId):
+    pass # TODO

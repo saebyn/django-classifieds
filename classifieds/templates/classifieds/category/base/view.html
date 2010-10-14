@@ -25,7 +25,7 @@
  <p>{{ ad.fields_dict.phone }}</p>
  <p>{{ ad.fields_dict.contactcompanyname }}</p>
  <p><a href="http://www.{{ ad.fields_dict.website }}" target="_blank">{{ ad.fields_dict.website|slice:":26" }}</a></p>
- <p><a href="{% url contact.views.contact_ad ad.pk %}">Contact Seller</a></p>
+ <p><a href="{% url classifieds.views.contact_seller ad.pk %}">Contact Seller</a></p>
  <ul class="head">
   <li><a href="javascript:window.print();">Print This Ad</a></li>
   <li><a href="javascript:;" onclick="window.location.href='mailto:?body=&quot;http://{{ site.domain }}/ads/{{ ad.pk }}&quot;';">Tell a Friend</a></li>

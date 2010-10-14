@@ -22,9 +22,11 @@
    <p><strong>Step 3 :</strong> Please review your post below</p>
   {% endif %}
  {% endblock %}
- 
- {% if ad.expired %}
- <h3>This ad has expired</h3>
+
+ {% if not create %}
+  {% if ad.expired %}
+  <h3>This ad has expired</h3>
+  {% endif %}
  {% endif %}
 
  {% block ad %}

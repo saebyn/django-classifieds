@@ -9,7 +9,7 @@
 <ul>
  <li><a href="/">Home</a></li>
 </ul>
-<div class="welcome">Welcome, <span class="name">{{ request.user.first_name }}</span></div>
+<div class="welcome">Welcome, <span class="name">{{ user.first_name }}</span></div>
 <ul class="arrow">
  <li><a href="{% url classifieds.views.create %}">Post a New Ad</a></li>
  <li><a href="{% url classifieds.views.mine %}">Manage My Ads</a></li>

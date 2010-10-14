@@ -12,14 +12,25 @@ from django.utils.translation import ugettext as _
 
 from django.core.paginator import Paginator, InvalidPage
 
+from django.template.loader import get_template
+from django.template import TemplateDoesNotExist, RequestContext
+
 from django import forms
 
-from django.conf import settings
-
-ADS_PER_PAGE = getattr(settings, 'ADS_PER_PAGE', 5)
+from classifieds.conf import settings
 
 # classifieds internal modules
 from models import Ad, Field, Category, Pricing, PricingOptions
+
+def render_category_page(request, category, page, context):
+    template_name = 'classifieds/category/' + category.template_prefix + '/' + page
+    try:
+        get_template(template_name)
+    except TemplateDoesNotExist:
+        template_name = 'classifieds/category/base/' + page
+
+    return render_to_response(template_name, context, 
+                              context_instance=RequestContext(request))
 
 def clean_adimageformset(self):
     max_size = self.instance.category.images_max_size
@@ -38,7 +49,7 @@ def clean_adimageformset(self):
         raise forms.ValidationError(_('Your image must be in one of the following formats: ') + string.join(self.instance.category.images_allowed_formats.values_list('format', flat=True), ','))
     
 
-def context_sortable(request, ads, perpage=ADS_PER_PAGE):
+def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
   order = '-'
   sort = 'expires_on'
   page = 1
