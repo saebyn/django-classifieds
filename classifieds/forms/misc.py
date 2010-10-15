@@ -3,7 +3,8 @@
 """
 
 from django import forms
-from models import Pricing, PricingOptions
+
+from classifieds.models import Pricing, PricingOptions
 
 class CheckoutForm(forms.Form):
 	# construct form from Pricing and PricingOptions models

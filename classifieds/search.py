@@ -5,7 +5,7 @@
 from django import forms
 from django.contrib.localflavor.us import forms as us_forms
 
-from models import *
+from classifieds.models import *
 
 class PriceRangeForm(forms.Form):
 	"""

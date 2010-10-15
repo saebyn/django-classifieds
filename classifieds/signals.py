@@ -5,7 +5,8 @@
 """
 
 from paypal.standard.ipn.signals import payment_was_successful
-from models import Payment
+
+from classifieds.models import Payment
         
 def make_payment(sender, **kwargs):
   payment = Payment.objects.get(pk=sender.item_number)

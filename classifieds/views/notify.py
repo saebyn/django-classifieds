@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 
-from classifieds.forms import SubscribeForm
+from classifieds.forms.misc import SubscribeForm
 from classifieds.models import UserProfile
 
 def notify_complete(request):
