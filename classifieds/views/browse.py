@@ -6,13 +6,14 @@ from django.template import RequestContext
 from django import forms
 from django.http import HttpResponseRedirect, Http404
 
-from classifieds.utils import context_sortable, render_category_page
+from classifieds.utils import context_sortable, render_category_page, prepare_sforms
 from classifieds.search import *
 
 def category_overview(request):
   context = {}
   categories = Category.objects.all().order_by('sort_order')
-  return render_to_response('classifieds/category_overview.html', context, context_instance=RequestContext(request))
+  return render_to_response('classifieds/category_overview.html', context,
+                            context_instance=RequestContext(request))
 
 
 def view(request, adId):
@@ -26,7 +27,10 @@ def view(request, adId):
 
 def search(request):
   # list categories available and send the user to the search_in_category view
-  return render_to_response('classifieds/category_choice.html', {'categories': Category.objects.all(), 'type': 'search'}, context_instance=RequestContext(request))
+  return render_to_response('classifieds/category_choice.html',
+                            {'categories': Category.objects.all(),
+                             'type': 'search'},
+                            context_instance=RequestContext(request))
 
 def search_in_category(request, slug):
   # reset the search params, if present
@@ -36,29 +40,6 @@ def search_in_category(request, slug):
     pass
   
   return search_results(request, slug)
-
-def prepare_sforms(fields, fields_left, post=None):
-  sforms = []
-  select_fields = {}
-  for field in fields:
-    if field.field_type == Field.SELECT_FIELD:  # is select field
-      # add select field
-      options = field.options.split(',')
-      choices = zip(options, options)
-      choices.insert(0, ('', 'Any',))
-      form_field = forms.ChoiceField(label=field.label, required=False, help_text=field.help_text + u'\nHold ctrl or command on Mac for multiple selections.', choices=choices, widget=forms.SelectMultiple)
-      # remove this field from fields_list
-      fields_left.remove( field.name )
-      select_fields[field.name] = form_field
-      
-  sforms.append(SelectForm.create(select_fields, post))
-  
-  for sf in searchForms:
-    f = sf.create(fields, fields_left, post)
-    if f != None:
-      sforms.append(f)
-  
-  return sforms
 
 def search_results(request, slug):
   cat = get_object_or_404(Category, slug=slug)
@@ -96,12 +77,17 @@ def search_results(request, slug):
         ads = f.filter(ads)
     
       if ads.count() == 0:
-        return render_to_response('classifieds/list.html', {'no_results':True, 'category':cat}, context_instance=RequestContext(request))
+        return render_to_response('classifieds/list.html',
+                                  {'no_results': True, 'category': cat},
+                                  context_instance=RequestContext(request))
       else:
         context = context_sortable(request, ads)
         context['category'] = cat
-        return render_to_response('classifieds/list.html', context, context_instance=RequestContext(request))
+        return render_to_response('classifieds/list.html', context,
+                                  context_instance=RequestContext(request))
   else:
     sforms = prepare_sforms(fields, fieldsLeft)
     
-  return render_to_response('classifieds/search.html', {'forms':sforms, 'category':cat}, context_instance=RequestContext(request))
+  return render_to_response('classifieds/search.html',
+                            {'forms':sforms, 'category':cat},
+                            context_instance=RequestContext(request))

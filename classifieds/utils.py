@@ -117,4 +117,27 @@ DAY ) > NOW()""")] ), select_params=[sort, PricingOptions.FEATURED_LISTING]).ext
   
   return {'page': page, 'sortfields': sortby_list, 'no_results': False, 'perpage': perpage}
 
+def prepare_sforms(fields, fields_left, post=None):
+  sforms = []
+  select_fields = {}
+  for field in fields:
+    if field.field_type == Field.SELECT_FIELD:  # is select field
+      # add select field
+      options = field.options.split(',')
+      choices = zip(options, options)
+      choices.insert(0, ('', 'Any',))
+      form_field = forms.ChoiceField(label=field.label, required=False, help_text=field.help_text + u'\nHold ctrl or command on Mac for multiple selections.', choices=choices, widget=forms.SelectMultiple)
+      # remove this field from fields_list
+      fields_left.remove( field.name )
+      select_fields[field.name] = form_field
+      
+  sforms.append(SelectForm.create(select_fields, post))
+  
+  for sf in searchForms:
+    f = sf.create(fields, fields_left, post)
+    if f != None:
+      sforms.append(f)
+  
+  return sforms
+
 
