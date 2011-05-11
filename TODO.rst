@@ -1,7 +1,11 @@
 
+* Unit testing
+
 * Remove the adform.py code
 
 * Rework the Category model
+
+* Documentation
 
 * Remove the Field and FieldValue models
 
