@@ -23,7 +23,7 @@ from django import forms
 from classifieds.conf import settings
 from classifieds.models import Field, FieldValue
 from classifieds.forms.widgets import TinyMCEWidget
-from classifieds.forms.field import TinyMCEField
+from classifieds.forms.fields import TinyMCEField
 from classifieds.utils import stripHTML
 
 __all__ = ('AdForm',)
