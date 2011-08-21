@@ -1,3 +1,7 @@
+-   fields: {active: false, category: 1, created_on: !!timestamp '2011-08-21 08:00:00',
+        expires_on: !!timestamp '2015-10-14 13:18:43', title: Testing ad, user: 2}
+    model: classifieds.ad
+    pk: 1
 -   fields: {active: true, category: 1, created_on: !!timestamp '2010-10-14 13:18:43',
         expires_on: !!timestamp '2015-10-14 13:18:43', title: Testing ad, user: 2}
     model: classifieds.ad

@@ -109,7 +109,9 @@ INSTALLED_APPS = (
     'registration',
     'profiles',
     'django.contrib.humanize',
-    'south'
+    'south',
+
+    'django_nose'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -135,7 +137,9 @@ LOGGING = {
     }
 }
 
-LOGIN_REDIRECT_URL = '/accounts/welcome/'
+LOGIN_REDIRECT_URL = '/registration/welcome/'
+LOGIN_URL = '/registration/login/'
+LOGOUT_URL = '/registration/logout/'
 
 ACCOUNT_ACTIVATION_DAYS = 1
 

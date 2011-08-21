@@ -14,5 +14,8 @@ Installation
   'profiles'
   'django.contrib.humanize'
 
+  and optionally 'south'
+
   to your `INSTALLED_APPS`.
 
+4. Set your LOGIN_URL = '/registration/login/' and LOGOUT_URL = '/registration/logout/'

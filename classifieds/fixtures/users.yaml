@@ -28,3 +28,18 @@
         username: user
     model: auth.user
     pk: 2
+-   fields:
+        date_joined: 2011-08-20 08:23:15
+        email: test2@example.com
+        first_name: Testing
+        groups: []
+        is_active: true
+        is_staff: false
+        is_superuser: false
+        last_login: 2011-08-20 08:23:15
+        last_name: User
+        password: sha1$8d62b$c1c5c708d8dc89d9305e9f2f3f0669d203997351
+        user_permissions: []
+        username: other_user
+    model: auth.user
+    pk: 3

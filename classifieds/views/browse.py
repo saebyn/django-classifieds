@@ -16,10 +16,11 @@ def category_overview(request):
                             context_instance=RequestContext(request))
 
 
-def view(request, adId):
+def view(request, pk):
   # find the ad, if available
-  ad = get_object_or_404(Ad, pk=adId, active=True)
+  ad = get_object_or_404(Ad, pk=pk, active=True)
   
+  # only show an expired ad if this user owns it
   if ad.expires_on < datetime.datetime.now() and ad.user != request.user:
     raise Http404
   

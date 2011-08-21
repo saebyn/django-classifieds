@@ -8,7 +8,6 @@ Ad Creation Flow
      
    * Shows non-authenticated users a signup / login / pricing template
 
-
 2. The 'classifieds_create_ad_select_category' url
 
    * Lists available Category objects as links to the 'classifieds_create_ad_select_category' url

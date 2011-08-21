@@ -1,46 +1,42 @@
 {% extends "classifieds/view.html" %}  
-{% comment %}
-  $Id$
-{% endcomment %}
+{% load humanize i18n %}
 
-{% load humanize %}
 {% block ad %}
-
 <div class="head">
- <span id="jobId">Ad Id : {{ ad.pk }}</span>
+ <span id="jobId">{% trans 'Ad Id' %} : {{ ad.pk }}</span>
  <h2>{{ ad.title }}</h2>
 </div>
 
-<p id="aboveSidebarView">Posted On : {{ ad.created_on|date:"F dS, Y" }}</p>
+<p id="aboveSidebarView">{% trans 'Posted On' %} : {{ ad.created_on|date:"F dS, Y" }}</p>
 
 <div id="sidebarView">
  <ul class="tools">
   {% ifequal request.user.pk ad.user.pk %}
-  <li><a class="button" href="{% url classifieds_manage_ad_edit ad.pk %}">Edit Ad</a></li>
-  {% endif %}
-  <li><a href="javascript:window.print();">Print This Ad</a></li>
-  <li><a href="javascript:;" onclick="window.location.href='mailto:?body=&quot;http://{{ site.domain }}/ads/{{ ad.pk }}&quot;';">Tell a Friend</a></li>
-  <li><a target="_blank" href="http://maps.google.com/maps?q={% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}">Map this Listing</a></li>
+  <li><a class="button" href="{% url classifieds_manage_ad_edit ad.pk %}">{% trans 'Edit Ad' %}</a></li>
+  {% endifequal %}
+  <li><a href="javascript:window.print();">{% trans 'Print This Ad' %}</a></li>
+  <li><a href="javascript:;" onclick="window.location.href='mailto:?body=&quot;http://{{ site.domain }}/ads/{{ ad.pk }}&quot;';">{% trans 'Tell a Friend' %}</a></li>
+  <li><a target="_blank" href="http://maps.google.com/maps?q={% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}">{% trans 'Map this Listing' %}</a></li>
  </ul>
- <p class="head">Contact Information</p>
+ <p class="head">{% trans 'Contact Information' %}</p>
  <p>{{ ad.fields_dict.contactname }}</p>
  <p>{% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}</p>
  <p>{{ ad.fields_dict.phone }}</p>
  <p>{{ ad.fields_dict.contactcompanyname }}</p>
  <p><a href="http://www.{{ ad.fields_dict.website }}" target="_blank">{{ ad.fields_dict.website|slice:":26" }}</a></p>
- <p><a href="{% url classifieds.views.contact.contact_seller ad.pk %}">Contact Seller</a></p>
+ <p><a href="{% url classifieds.views.contact.contact_seller ad.pk %}">{% trans 'Contact Seller' %}</a></p>
 </div>
 
  
 <div id="jobContent">
- <h3>Description :</h3>
+ <h3>{% trans 'Description' %} :</h3>
   {{ ad.fields_dict.description|safe }}
 </div>
 
  <div class="images">
  {% for image in ad.adimage_set.all %}
   {% if image.get_thumb_photo_url %}
-   <a href="{{ image.get_full_photo_url }}"><img src="{{ image.get_thumb_photo_url }}" alt="Thumbnail" class="thumbnail" /></a>
+   <a href="{{ image.get_full_photo_url }}"><img src="{{ image.get_thumb_photo_url }}" alt="{% trans 'Thumbnail' %}" class="thumbnail" /></a>
   {% endif %}
  {% endfor %}
  </div>
