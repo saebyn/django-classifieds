@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.forms.models import inlineformset_factory
+from django.contrib import messages
 
 from classifieds.models import Ad, AdImage
 from classifieds.adform import AdForm
@@ -26,8 +27,7 @@ def delete(request, pk):
   ad.delete()
   
   # create status message
-  # TODO switch to new messages framework
-  request.user.message_set.create(message='Ad deleted.')
+  messages.success(message='Ad deleted.')
   
   # send the user back to their ad list
   return redirect('classifieds_manage_view_all')

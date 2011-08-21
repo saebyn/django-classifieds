@@ -12,7 +12,8 @@ class TestAdCreation(FancyTestCase):
 
     def test_create_ad_redirects_users_to_select_category(self):
         response = self.get('classifieds_create_ad')
-        self.assertRedirects(response, reverse('classifieds_create_ad_select_category'))
+        self.assertRedirects(response,
+                             reverse('classifieds_create_ad_select_category'))
 
     def test_create_ad_renders_pricing_template_for_unauthenticated_users(self):
         self.client.logout()
