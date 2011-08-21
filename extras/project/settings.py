@@ -149,3 +149,9 @@ RECAPTCHA_PRIVATE_KEY = "your private key"
 
 PAYPAL_RECEIVER_EMAIL = ''
 
+TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
