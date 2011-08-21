@@ -1,76 +1,105 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
- <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/reset.css" />
-  <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/master.css" />
-  {% block head %}
-  {% endblock %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="{{ LANGUAGE_CODE }}"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="{{ LANGUAGE_CODE }}"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="{{ LANGUAGE_CODE }}"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ LANGUAGE_CODE }}"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>{% block title %}
 {% if site %}
 {{ site.name }}
 {% else %}
-Django Classifieds
+{% trans 'Django Classifieds' %}
 {% endif %}
 {% endblock %}</title>
+
+  <meta name="description" content="{% trans 'Classified Ads System for Django' %}">
+  <meta name="author" content="John Weaver">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  {% block sitecss %}
+  <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/reset.css">
+  <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/master.css">
+  {% endblock %}
+
+  {% block head %}
+  {% endblock %}
  </head>
  <body>
+  {% block body %}
   <div id="topbar">
 		{% if user.is_authenticated %}
 		<ul class="commands">
-		 <li><a href="/">Home</a></li>
+     <li><a href="/">{% trans 'Home' %}</a></li>
 		 <li>
-		  <a href="{% url classifieds.views.create.select_category %}">Post</a>
+      <a href="{% url classifieds.views.create.select_category %}">{% trans 'Post' %}</a>
 		 </li>
 		 <li>
-		  <a href="{% url classifieds.views.manage.mine %}">Manage</a>
+      <a href="{% url classifieds.views.manage.mine %}">{% trans 'Manage' %}</a>
 		 </li>
 		 <li>
-		  <a href="{% url profiles_edit_profile %}">Settings</a>
+      <a href="{% url profiles_edit_profile %}">{% trans 'Settings' %}</a>
 		 </li>
 		 <li>
-		  <a href="{% url django.contrib.auth.views.logout %}">Logout</a>
+      <a href="{% url django.contrib.auth.views.logout %}">{% trans 'Logout' %}</a>
 		 </li>
 		</ul>
 		{% else %}
 		<ul class="commands">
 		 <li><a href="/">Home</a></li>
 		 <li>
-		  <a href="{% url django.contrib.auth.views.login %}">Login</a>
+      <a href="{% url django.contrib.auth.views.login %}">{% trans 'Login' %}</a>
 		 </li>
 		 <li>
-		  <a href="{% url registration_register %}">Register</a>
+      <a href="{% url registration_register %}">{% trans 'Register' %}</a>
 		 </li>
 		</ul>
 		{% endif %}
   </div>
 
   <div id="allcontent"> 
-    <div id="content">
-     {% block messages %}
-     {% if messages %}
-     <div class="messages">
-      <ul>
-       {% for message in messages %}
-       <li>{{ message }}</li>
-       {% endfor %}
-      </ul>
-     </div>
-     {% endif %}
-     {% endblock %}
-     {% block content %}{% endblock %}
+   <div id="content">
+    {% block messages %}
+    {% if messages %}
+    <div class="messages">
+     <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+     </ul>
     </div>
+    {% endif %}
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+   </div>
   </div>
    
   <div id="footer">
    <div class="links">
-    <a href="#">Help</a>
-    <a href="/contact/">Contact Us</a>
+    <a href="#">{% trans 'Help' %}</a>
+    <a href="/contact/">{% trans 'Contact Us' %}</a>
    </div>
-  
+
+   {% blocktrans %}
    Copyright &copy; 2010&nbsp;&mdash;&nbsp;
    John Weaver, All Rights Reserved&nbsp;&mdash;&nbsp;
    Developed by <a href="http://saebyn.info/">John Weaver</a>
+   {% endblocktrans %}
   </div>
+
+  {% block extrajs %}
+  {% endblock %}
+
+  {% endblock body %}
+
+  <!--[if lt IE 7 ]>
+    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
  </body>
 </html>
