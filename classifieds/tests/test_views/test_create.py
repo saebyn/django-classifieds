@@ -1,10 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-
-class FancyTestCase(TestCase):
-    def get(self, view_or_name, params={}, *args, **kwargs):
-        return self.client.get(reverse(view_or_name, args=args, kwargs=kwargs), params)
+from classifieds.tests.test_views import FancyTestCase
 
 
 class TestAdCreation(FancyTestCase):
@@ -81,6 +78,9 @@ class TestAdCreationEditing(FancyTestCase):
         self.assertIn('imagesformset', response.context)
 
     def test_ad_edit_generates_thumbnails(self):
+        self.fail()
+
+    def test_ad_edit_save_redirects_to_preview(self):
         self.fail()
 
     def test_ad_preview_redirects_to_browse_if_ad_is_active(self):

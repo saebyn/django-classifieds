@@ -26,6 +26,7 @@ def first_post(request):
     return render_to_response('classifieds/index.html', {'prices': Pricing.objects.all()}, context_instance=RequestContext(request))    
 
 
+# TODO not sure if this should be in this file?
 @login_required
 def view_bought(request, pk):
   messages.success(_('Your ad has been successfully posted. Thank You for Your Order!'))
@@ -75,7 +76,7 @@ def edit(request, pk):
           image.resize()
           image.generate_thumbnail()
         
-        return HttpResponseRedirect(reverse('classifieds.views.create.preview', args=[ad.pk]))
+        return reverse('classifieds_create_ad_preview', pk=ad.pk)
   else:
     imagesformset = ImageUploadFormSet(instance=ad)
     form = AdForm(ad)
@@ -98,6 +99,7 @@ def preview(request, pk):
                               {'ad': ad, 'create': True})
 
 
+# TODO not sure if this should be in this file?
 def checkout(request, pk):
   ad = get_object_or_404(Ad, pk=pk)
   if request.method == 'POST':
@@ -147,6 +149,8 @@ def checkout(request, pk):
     form = CheckoutForm()
   
   return render_to_response('classifieds/checkout.html', {'ad': ad, 'form': form}, context_instance=RequestContext(request))
-  
+
+
+# TODO not sure if this should be in this file?
 def pricing(request):
   return render_to_response('classifieds/pricing.js', {'prices': Pricing.objects.all(), 'options': PricingOptions.objects.all()}, context_instance=RequestContext(request))

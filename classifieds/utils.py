@@ -1,5 +1,4 @@
 """
-  $Id$
 """
 
 from PIL import Image
@@ -21,6 +20,7 @@ from classifieds.conf import settings
 # classifieds internal modules
 from models import Ad, Field, Category, Pricing, PricingOptions
 
+
 def render_category_page(request, category, page, context):
     template_name = 'classifieds/category/' + category.template_prefix + '/' + page
     try:
@@ -30,6 +30,7 @@ def render_category_page(request, category, page, context):
 
     return render_to_response(template_name, context, 
                               context_instance=RequestContext(request))
+
 
 def clean_adimageformset(self):
     max_size = self.instance.category.images_max_size

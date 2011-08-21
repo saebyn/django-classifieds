@@ -26,7 +26,7 @@ urlpatterns = base_urlpatterns
 
 # top-level urls
 urlpatterns += patterns('classifieds.views',
-  (r'^mine/$', 'manage.mine'),
+  url(r'^mine/$', 'manage.mine', name='classifieds_manage_view_all'),
   url(r'^edit/(?P<pk>[0-9]+)/$', 'manage.edit', name='classifieds_manage_ad_edit'),
   (r'^delete/(?P<pk>[0-9]+)/$', 'manage.delete'),
 
