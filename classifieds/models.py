@@ -108,6 +108,10 @@ class Ad(models.Model):
     active = models.BooleanField() # active means that the ad was actually created
     title = models.CharField(max_length=255)
     
+    @models.permalink
+    def get_absolute_url(self):
+        return ('classifieds_browse_ad_view', (self.pk,))
+
     def __unicode__(self):
         return u'Ad #' + unicode(self.pk) + ' titled "' + self.title + u'" in category ' + self.category.name
       
