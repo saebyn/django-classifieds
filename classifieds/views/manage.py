@@ -60,7 +60,7 @@ def edit(request, adId):
         image.generate_thumbnail()
       return HttpResponseRedirect(reverse('classifieds.views.mine'))
   else:
-    imagesformset = ImageUploadFormSet(request.POST, request.FILES, instance=ad)
+    imagesformset = ImageUploadFormSet(instance=ad)
     form = AdForm(ad)
   
   return render_category_page(request, ad.category, 'edit.html',
