@@ -32,9 +32,17 @@
  {% block ad %}
 
 <div class="ad-view">
- <div class="options">
-  <a href="{% url classifieds.views.browse.search_results ad.category.pk %}">&lt; Back to Results</a>&nbsp;|&nbsp;<a href="{% url contact.views.contact_ad ad.pk %}">Contact Info</a>
- </div>
+ <ul class="options">
+  <li>
+   <a href="{% url classifieds.views.browse.search_results ad.category.pk %}">&lt; Back to Results</a>
+   </li>
+  <li>
+   <a href="{% url contact.views.contact_ad ad.pk %}">Contact Info</a>
+  </li>
+  <li>
+   <a href="{% url classifieds_manage_ad_edit ad.pk %}">Edit Ad</a>
+  </li>
+</div>
 
  <div class="title">{{ ad.title }}</div>
 
