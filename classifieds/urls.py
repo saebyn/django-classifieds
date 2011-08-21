@@ -6,11 +6,14 @@ from django.conf.urls.defaults import *
 # nested urls
 base_urlpatterns = patterns('classifieds.views',
   (r'^$', 'browse.category_overview'),
-  (r'^post/$', 'create.first_post'),
-  (r'^create/$', 'create.select_category'),
-  (r'^create/([-\w]+)/$', 'create.create_in_category'),
+
+
+  url(r'^post/$', 'create.first_post', name='classifieds_create_ad'),
+  url(r'^create/$', 'create.select_category', name='classifieds_create_ad_select_category'),
+  url(r'^create/([-\w]+)/$', 'create.create_in_category', name='classifieds_create_ad_in_category'),
   url(r'^create/edit/([0-9]+)/$', 'create.edit', name='classifieds_create_ad_edit'),
-  (r'^create/preview/([0-9]+)/$', 'create.preview'),
+  url(r'^create/preview/([0-9]+)/$', 'create.preview', name='classifieds_create_ad_preview'),
+
 
   (r'^search/$', 'browse.search'),
   (r'^search/([-\w]+)/$', 'browse.search_in_category'),
