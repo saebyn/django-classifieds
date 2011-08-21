@@ -14,6 +14,14 @@
 <p id="aboveSidebarView">Posted On : {{ ad.created_on|date:"F dS, Y" }}</p>
 
 <div id="sidebarView">
+ <ul class="tools">
+  {% ifequal request.user.pk ad.user.pk %}
+  <li><a class="button" href="{% url classifieds_manage_ad_edit ad.pk %}">Edit Ad</a></li>
+  {% endif %}
+  <li><a href="javascript:window.print();">Print This Ad</a></li>
+  <li><a href="javascript:;" onclick="window.location.href='mailto:?body=&quot;http://{{ site.domain }}/ads/{{ ad.pk }}&quot;';">Tell a Friend</a></li>
+  <li><a target="_blank" href="http://maps.google.com/maps?q={% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}">Map this Listing</a></li>
+ </ul>
  <p class="head">Contact Information</p>
  <p>{{ ad.fields_dict.contactname }}</p>
  <p>{% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}</p>
@@ -21,11 +29,6 @@
  <p>{{ ad.fields_dict.contactcompanyname }}</p>
  <p><a href="http://www.{{ ad.fields_dict.website }}" target="_blank">{{ ad.fields_dict.website|slice:":26" }}</a></p>
  <p><a href="{% url classifieds.views.contact.contact_seller ad.pk %}">Contact Seller</a></p>
- <ul class="head">
-  <li><a href="javascript:window.print();">Print This Ad</a></li>
-  <li><a href="javascript:;" onclick="window.location.href='mailto:?body=&quot;http://{{ site.domain }}/ads/{{ ad.pk }}&quot;';">Tell a Friend</a></li>
-  <li><a target="_blank" href="http://maps.google.com/maps?q={% if ad.fields_dict.city %}{{ ad.fields_dict.city }}{% endif %} {{ ad.fields_dict.location }}">Map this Listing</a></li>
- </ul>
 </div>
 
  
