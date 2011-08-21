@@ -1,0 +1,52 @@
+-   fields:
+        contact_form_upload_file_extensions: txt,doc,odf,pdf
+        contact_form_upload_max_size: 1048576
+        description: Test
+        enable_contact_form_upload: false
+        images_allowed_formats: [1]
+        images_max_count: 3
+        images_max_height: 1024
+        images_max_size: 1048576
+        images_max_width: 1024
+        name: Test
+        site: 1
+        slug: test
+        sort_order: 0
+        sortby_fields: ''
+        template_prefix: ''
+    model: classifieds.category
+    pk: 1
+-   fields:
+        contact_form_upload_file_extensions: txt,doc,odf,pdf
+        contact_form_upload_max_size: 1048576
+        description: Second test category
+        enable_contact_form_upload: true
+        images_allowed_formats: [1]
+        images_max_count: 0
+        images_max_height: 1024
+        images_max_size: 1048576
+        images_max_width: 1024
+        name: Second Category
+        site: 1
+        slug: second-category
+        sort_order: 1
+        sortby_fields: ''
+        template_prefix: ''
+    model: classifieds.category
+    pk: 2
+-   fields: {category: 1, enable_counter: false, enable_wysiwyg: false, field_type: 4,
+        help_text: Enter a date and time., label: Test field, max_length: null, name: Test
+            Field, options: '', required: true}
+    model: classifieds.field
+    pk: 1
+-   fields: {category: 1, enable_counter: true, enable_wysiwyg: true, field_type: 12,
+        help_text: '', label: Test text field, max_length: 1000, name: Test Text Field,
+        options: '', required: false}
+    model: classifieds.field
+    pk: 2
+-   fields: {category: 2, enable_counter: false, enable_wysiwyg: false, field_type: 13,
+        help_text: Choose one, label: Test field, max_length: null, name: Second test
+            field, options: 'A, B, C', required: true}
+    model: classifieds.field
+    pk: 3
+

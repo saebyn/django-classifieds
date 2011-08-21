@@ -1,0 +1,9 @@
+-   fields: {format: png}
+    model: classifieds.imageformat
+    pk: 1
+-   fields: {format: jpeg}
+    model: classifieds.imageformat
+    pk: 2
+-   fields: {format: gif}
+    model: classifieds.imageformat
+    pk: 3
