@@ -1,6 +1,8 @@
-Django>=1.3
-django-paypal
-django-registration
-django-profiles
-django-nose
-south
+Django==1.3
+South==0.7.3
+django-haystack==1.2.4
+django-nose==0.1.3
+django-paypal==0.1.2
+django-profiles==0.2
+django-registration==0.7
+nose==1.1.2
