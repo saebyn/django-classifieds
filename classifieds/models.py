@@ -141,12 +141,20 @@ class Ad(models.Model):
             try:
                 fields_list.append((field, field.fieldvalue_set.get(ad=self),))
             except FieldValue.DoesNotExist:
-                pass  # XXX ?
+                pass  # If no value is associated with that field, skip it.
 
         return fields_list
 
+    def field(self, name):
+        if name == 'title':
+            return self.title
+        else:
+            return FieldValue.objects.get(field__name=name, ad=self).value
+
     def fields_dict(self):
         fields_dict = {}
+        fields_dict['title'] = self.title
+
         for key, value in self.fields():
             fields_dict[key.name] = value.value
 
