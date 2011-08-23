@@ -5,11 +5,7 @@
 
   - Views
 
-    1. Ad management
-
-    2. Ad browsing
-
-    3. Checkout / Payment processing
+    1. Ad browsing / searching
 
   - Utilities
 
@@ -36,8 +32,6 @@
   - Add support for translations in templates, where not already present
 
   - Audit code for translatable strings to marked for gettext support
-
-* Refactor the custom category fields system
 
 * Documentation
 
