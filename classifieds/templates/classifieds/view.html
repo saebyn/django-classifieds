@@ -37,7 +37,7 @@
    <a href="{% url classifieds.views.browse.search_results ad.category.pk %}">&lt; Back to Results</a>
    </li>
   <li>
-   <a href="{% url contact.views.contact_ad ad.pk %}">Contact Info</a>
+   <a href="{% url classifieds.view.contact.contact_seller ad.pk %}">Contact Info</a>
   </li>
   <li>
    <a href="{% url classifieds_manage_ad_edit ad.pk %}">Edit Ad</a>
@@ -83,8 +83,8 @@
  {% block preview_next %}
   {% if create %}
    <div style="height: 100px;">
-    <a class="button" style="margin-left: 73px; margin-right: 10px; float: left;" href="{% url classifieds.views.create.edit ad.pk %}">Edit Ad</a>
-    <a class="button" style="float: left;" href="{% url classifieds.views.create.checkout ad.pk %}">Continue</a>
+    <a class="button" style="margin-left: 73px; margin-right: 10px; float: left;" href="{% url classifieds_create_ad_edit ad.pk %}">Edit Ad</a>
+    <a class="button" style="float: left;" href="{% url classifieds.views.payment.checkout ad.pk %}">Continue</a>
    </div>
   {% endif %}
  {% endblock %}

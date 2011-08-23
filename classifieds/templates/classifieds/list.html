@@ -31,7 +31,7 @@
        <li>${{ ad.fields_dict.price|intcomma }}</li>
       {% endif %}
       </ul>
-      <a href="{% url classifieds.views.browse.view ad.pk %}">View Details &gt; &gt;</a>
+      <a href="{% url classifieds_browse_ad_view ad.pk %}">View Details &gt; &gt;</a>
      </div>
      <ul class="arrow">
       <li>{% if ad.fields_dict.city %}{{ ad.fields_dict.city }}, {% endif %}{{ ad.fields_dict.location }}</li>
@@ -40,7 +40,7 @@
     </div>
    {% ifequal ad.user user %}
     <div class="options">
-     <span class="label">Ad ID : </span>{{ ad.pk }}&nbsp;|&nbsp;{{ ad.adimage_set.count }} Photos&nbsp;|&nbsp;<a href="{% url classifieds.views.browse.view ad.pk %}">View Details</a>&nbsp;|&nbsp;<a href="{% url classifieds.views.manage.edit ad.pk %}">Edit Listing</a>&nbsp;|&nbsp;<a onclick="return confirm('Are you sure you want to delete this ad?');" href="{% url classifieds.views.manage.delete ad.pk %}">Delete Listing</a>&nbsp;|&nbsp;<a href="{% url classifieds.views.create.checkout ad.pk %}">Renew Listing</a>
+     <span class="label">Ad ID : </span>{{ ad.pk }}&nbsp;|&nbsp;{{ ad.adimage_set.count }} Photos&nbsp;|&nbsp;<a href="{% url classifieds.views.browse.view ad.pk %}">View Details</a>&nbsp;|&nbsp;<a href="{% url classifieds_manage_ad_edit ad.pk %}">Edit Listing</a>&nbsp;|&nbsp;<a onclick="return confirm('Are you sure you want to delete this ad?');" href="{% url classifieds_manage_ad_delete ad.pk %}">Delete Listing</a>&nbsp;|&nbsp;<a href="{% url classifieds.views.payment.checkout ad.pk %}">Renew Listing</a>
     </div>
    {% endifequal %}
    </div>
@@ -49,7 +49,7 @@
  
   {% include "classifieds/pager.html" %} 
  {% else %}
-  <p>You don't have any ads. Post a new ad <a href="{% url classifieds.views.create.select_category %}">here</a>.
+  <p>You don't have any ads. Post a new ad <a href="{% url classifieds_create_ad_select_category %}">here</a>.
  {% endif %}
 {% endif %}
 {% endblock %}
