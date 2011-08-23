@@ -326,10 +326,10 @@ from django.contrib.localflavor.us.models import USStateField, PhoneNumberField
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    receives_new_posting_notices = models.BooleanField()
-    receives_newsletter = models.BooleanField()
-    address = models.CharField(max_length=100, blank=True)
-    city = models.CharField(max_length=100, blank=True)
-    state = USStateField(blank=True)
-    zipcode = models.CharField(max_length=10, blank=True)
+    receives_new_posting_notices = models.BooleanField(default=False)
+    receives_newsletter = models.BooleanField(default=False)
+    address = models.CharField(max_length=100, blank=True, default='')
+    city = models.CharField(max_length=100, blank=True, default='')
+    state = USStateField(blank=True, default='')
+    zipcode = models.CharField(max_length=10, blank=True, default='')
     phone = PhoneNumberField(blank=True, default='')

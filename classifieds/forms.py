@@ -6,6 +6,9 @@ from django.utils.translation import ugettext as _
 from models import Pricing, PricingOptions
 
 
+# TODO make inlineformset class for ad images
+
+
 class CheckoutForm(forms.Form):
     # construct form from Pricing and PricingOptions models
     pricing = forms.ChoiceField(choices=map(lambda x: (x.pk, unicode(x.length) + u' Day Listing : $' + unicode(x.price)), Pricing.objects.all()), widget=forms.RadioSelect)

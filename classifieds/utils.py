@@ -5,8 +5,8 @@ from PIL import Image
 import HTMLParser
 import string
 import re
+import os.path
 
-from django.shortcuts import render_to_response
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 
@@ -16,22 +16,27 @@ from django.template.loader import get_template
 from django.template import TemplateDoesNotExist, RequestContext
 
 from django import forms
+from django.http import HttpResponse
 from django.forms.fields import EMPTY_VALUES
 
 from classifieds.conf import settings
 from classifieds.models import Ad, Field, Category, Pricing, PricingOptions
 
 
-def render_category_page(request, category, page, context):
-    template_name = u'classifieds/category/%s/%s' % (category.template_prefix,
-                                                     page,)
-    try:
-        get_template(template_name)
-    except TemplateDoesNotExist:
-        template_name = 'classifieds/category/base/' + page
+def category_template_name(category, page):
+    return os.path.join(u'classifieds/category',
+                        category.template_prefix, page)
 
-    return render_to_response(template_name, context,
-                              context_instance=RequestContext(request))
+
+def render_category_page(request, category, page, context):
+    template_name = category_template_name(category, page)
+    try:
+        template = get_template(template_name)
+    except TemplateDoesNotExist:
+        template = get_template('classifieds/category/base/%s' % page)
+
+    context = RequestContext(request, context)
+    return HttpResponse(template.render(context))
 
 
 def clean_adimageformset(self):

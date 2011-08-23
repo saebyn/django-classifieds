@@ -138,6 +138,15 @@ LOGGING = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
+
+AUTH_PROFILE_MODULE = 'classifieds.UserProfile'
+
 LOGIN_REDIRECT_URL = '/registration/welcome/'
 LOGIN_URL = '/registration/login/'
 LOGOUT_URL = '/registration/logout/'

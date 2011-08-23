@@ -1,6 +1,8 @@
 
 * Verify all functionality works with Django 1.3 (see unit testing below)
 
+* Add support for haystack search
+
 * Unit testing
 
   - Views
@@ -29,6 +31,8 @@
 
 * Refactor view code
 
+  - Ad editing in create and manage modules should be unified
+
 * Improve i18n support
 
   - Add support for translations in templates, where not already present
@@ -36,8 +40,6 @@
   - Audit code for translatable strings to marked for gettext support
 
 * Refactor the custom category fields system
-
-* Add support for haystack search
 
 * Documentation
 

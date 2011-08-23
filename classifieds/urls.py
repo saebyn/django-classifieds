@@ -5,7 +5,8 @@ from django.conf.urls.defaults import *
 
 # nested urls
 base_urlpatterns = patterns('classifieds.views',
-    (r'^$', 'browse.category_overview'),
+    url(r'^$', 'browse.category_overview',
+        name='classifieds_browse_categories'),
 
     url(r'^post/$', 'create.first_post', name='classifieds_create_ad'),
     url(r'^create/$', 'create.select_category',
