@@ -82,7 +82,38 @@ class TestAdCreationEditing(FancyTestCase):
         self.fail()
 
     def test_ad_edit_save_redirects_to_preview(self):
-        self.fail()
+        params = {'adimage_set-TOTAL_FORMS': u'3',
+                  'adimage_set-INITIAL_FORMS': u'0',
+                  'adimage_set-MAX_NUM_FORMS': u'3',
+                  'title': 'Test Title',
+                  'Test Field': '2011-08-22 08:00:00'}
+        response = self.client.post(reverse("classifieds_create_ad_edit",
+                                    kwargs=dict(pk=1)), params)
+        self.assertRedirects(response, reverse("classifieds_create_ad_preview",
+                                               kwargs=dict(pk=1)))
+
+    def test_ad_edit_save_saves_title(self):
+        params = {'adimage_set-TOTAL_FORMS': u'3',
+                  'adimage_set-INITIAL_FORMS': u'0',
+                  'adimage_set-MAX_NUM_FORMS': u'3',
+                  'title': 'Test Title',
+                  'Test Field': '2011-08-22 08:00:00'}
+        response = self.client.post(reverse("classifieds_create_ad_edit",
+                                    kwargs=dict(pk=1)), params)
+        from classifieds.models import Ad
+        self.assertEqual(Ad.objects.get(pk=1).title, 'Test Title')
+
+    def test_ad_edit_save_saves_custom_field(self):
+        params = {'adimage_set-TOTAL_FORMS': u'3',
+                  'adimage_set-INITIAL_FORMS': u'0',
+                  'adimage_set-MAX_NUM_FORMS': u'3',
+                  'title': 'Test Title',
+                  'Test Field': '2011-08-22 08:00:00'}
+        response = self.client.post(reverse("classifieds_create_ad_edit",
+                                    kwargs=dict(pk=1)), params)
+        from classifieds.models import Ad
+        self.assertEqual(Ad.objects.get(pk=1).field('Test Field'),
+                         '2011-08-22 08:00:00')
 
     def test_ad_preview_redirects_to_browse_if_ad_is_active(self):
         from classifieds.models import Ad
