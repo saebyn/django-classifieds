@@ -32,14 +32,12 @@ urlpatterns += patterns('classifieds.views',
     url(r'^mine/$', 'manage.mine', name='classifieds_manage_view_all'),
     url(r'^edit/(?P<pk>[0-9]+)/$', 'manage.edit',
         name='classifieds_manage_ad_edit'),
-    (r'^delete/(?P<pk>[0-9]+)/$', 'manage.delete'),
+    url(r'^delete/(?P<pk>[0-9]+)/$', 'manage.delete',
+        name='classifieds_manage_ad_delete'),
 
-    (r'^new/(?P<pk>[0-9]+)/$', 'create.view_bought'),
-    (r'^checkout/(?P<pk>[0-9]+)$', 'create.checkout'),
-    (r'^pricing$', 'create.pricing'),
-
-    (r'^notify$', 'notify.notify'),
-    (r'^notify_complete$', 'notify.notify_complete'),
+    (r'^new/(?P<pk>[0-9]+)/$', 'payment.view_bought'),
+    (r'^checkout/(?P<pk>[0-9]+)$', 'payment.checkout'),
+    (r'^pricing$', 'payment.pricing'),
 
     (r'^contact/(?P<pk>[0-9]+)$', 'contact.contact_seller'),
 )
