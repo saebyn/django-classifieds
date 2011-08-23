@@ -53,18 +53,6 @@ class Category(models.Model):
         verbose_name_plural = u'categories'
 
 
-class Subcategory(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField()
-    category = models.ForeignKey(Category)
-
-    def __unicode__(self):
-        return self.name + _(u' subcategory')
-
-    class Meta:
-        verbose_name_plural = u'subcategories'
-
-
 class Field(models.Model):
     BOOLEAN_FIELD = 1
     CHAR_FIELD = 2
@@ -274,16 +262,6 @@ class ZipCode(models.Model):
     def __unicode__(self):
         return _(u'Zip: %s, City: %s, State: %s') % (unicode(self.zipcode),
                                                      self.city, self.state,)
-
-
-class SiteSetting(models.Model):
-    site = models.ForeignKey(Site)
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
-    value = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return self.description
 
 
 class Payment(models.Model):

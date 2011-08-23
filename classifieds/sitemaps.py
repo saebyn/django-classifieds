@@ -16,9 +16,10 @@ class AdSitemap(Sitemap):
                                  expires_on__gt=datetime.datetime.now())
 
     def location(self, item):
-        return reverse('classifieds.views.browse.view', args=[item.pk])
+        return reverse('classifieds_browse_ad_view', args=[item.pk])
 
     def lastmod(self, item):
         return item.created_on
+
 
 sitemaps = {'ads': AdSitemap}

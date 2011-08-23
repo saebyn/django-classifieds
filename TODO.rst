@@ -1,8 +1,6 @@
 
 * Verify all functionality works with Django 1.3 (see unit testing below)
 
-* Add support for haystack search
-
 * Unit testing
 
   - Views

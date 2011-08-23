@@ -40,5 +40,4 @@ admin.site.register(models.Payment, PaymentAdmin)
 admin.site.register(models.Ad, AdAdmin)
 admin.site.register(models.Category, CategoryAdmin)
 admin.site.register([models.Field, models.FieldValue, models.Pricing,
-                     models.PricingOptions, models.SiteSetting,
-                     models.ImageFormat])
+                     models.PricingOptions, models.ImageFormat])
