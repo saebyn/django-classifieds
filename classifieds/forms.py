@@ -11,16 +11,12 @@ from models import Pricing, PricingOptions
 
 class CheckoutForm(forms.Form):
     # construct form from Pricing and PricingOptions models
-    pricing = forms.ChoiceField(choices=map(lambda x: (x.pk, unicode(x.length) + u' Day Listing : $' + unicode(x.price)), Pricing.objects.all()), widget=forms.RadioSelect)
-    pricing_options = forms.MultipleChoiceField(choices=map(lambda x: (x.pk, unicode(x) + u' : $' + unicode(x.price)), PricingOptions.objects.all()), widget=forms.CheckboxSelectMultiple, required=False)
-
-    def clean_pricing(self):
-        try:
-            Pricing.objects.get(pk=int(self.data["pricing"]))
-        except Pricing.DoesNotExist:
-            raise forms.ValidationError(_("The selected price does not exist."))
-
-        return int(self.data["pricing"])
+    pricing = forms.ModelChoiceField(queryset=Pricing.objects.all(),
+                                     widget=forms.RadioSelect,
+                                     empty_label=None)
+    pricing_options = forms.ModelMultipleChoiceField(queryset=PricingOptions.objects.all(),
+                                                     widget=forms.CheckboxSelectMultiple,
+                                                     required=False)
 
 
 class SubscribeForm(forms.Form):

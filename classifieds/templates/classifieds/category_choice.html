@@ -1,22 +1,13 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
+{% load i18n classifieds %}
 
 {% block content %}
  {% block ad_create_status %}
  {% ifequal type "create" %}
-   <h1>Post Ad</h1>
-   <ol class="progress">
-    <li class="selected">1 | Select</li>
-    <li>2 | Post</li>
-    <li>3 | Review</li>
-    <li>4 | Checkout</li>
-   </ol>
-   <p><strong>Step 1 :</strong> Please Select an Ad Category</p>
+  {% post_ad_progress 1 %}
  {% endifequal %}
  {% ifequal type "search" %}
-   <h1>Select Category to Search</h1>
+  <h1>{% trans 'Select Category to Search' %}</h1>
  {% endifequal %}
  {% endblock %}
 

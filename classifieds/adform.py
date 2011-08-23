@@ -32,9 +32,12 @@ __all__ = ('AdForm',)
 
 
 class AdForm(BaseForm):
-    def __init__(self, instance, data=None, files=None, auto_id='id_%s', prefix=None,
-                             initial=None, error_class=ErrorList, label_suffix=':',
-                             empty_permitted=False):
+    def __init__(self, data=None, files=None, instance=None, auto_id='id_%s',
+                 prefix=None, initial=None, error_class=ErrorList,
+                 label_suffix=':', empty_permitted=False):
+
+        if not instance:
+            raise NotImplementedError("Ad instance must be provided")
 
         self.instance = instance
         object_data = self.instance.fields_dict()

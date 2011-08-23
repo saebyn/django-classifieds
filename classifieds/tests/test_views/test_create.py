@@ -52,14 +52,6 @@ class TestAdCreationEditing(FancyTestCase):
     def setUp(self):
         self.client.login(username='user', password='user')
 
-    def test_ad_edit_redirects_to_manage_if_ad_is_active(self):
-        from classifieds.models import Ad
-        ad = Ad.objects.get(pk=18)  # an active ad
-
-        response = self.get('classifieds_create_ad_edit', pk=ad.pk)
-        self.assertRedirects(response, reverse('classifieds_manage_ad_edit',
-                                               kwargs={'pk': ad.pk}))
-
     def test_ad_edit_nonauthed_user_cant_edit_ad(self):
         self.client.logout()
         response = self.get('classifieds_create_ad_edit', pk=1)
@@ -80,6 +72,10 @@ class TestAdCreationEditing(FancyTestCase):
 
     def test_ad_edit_generates_thumbnails(self):
         self.fail()
+
+    def test_ad_edit_has_custom_fields(self):
+        response = self.get("classifieds_create_ad_edit", pk=1)
+        self.assertIn('Test Field', response.context['form'].fields.keys())
 
     def test_ad_edit_save_redirects_to_preview(self):
         params = {'adimage_set-TOTAL_FORMS': u'3',
@@ -114,14 +110,6 @@ class TestAdCreationEditing(FancyTestCase):
         from classifieds.models import Ad
         self.assertEqual(Ad.objects.get(pk=1).field('Test Field'),
                          '2011-08-22 08:00:00')
-
-    def test_ad_preview_redirects_to_browse_if_ad_is_active(self):
-        from classifieds.models import Ad
-        ad = Ad.objects.get(pk=18)  # an active ad
-
-        response = self.get('classifieds_create_ad_preview', pk=ad.pk)
-        self.assertRedirects(response, reverse('classifieds_browse_ad_view',
-                                               kwargs={'pk': ad.pk}))
 
     def test_ad_preview_nonauthed_user_cant_see_ad(self):
         self.client.logout()

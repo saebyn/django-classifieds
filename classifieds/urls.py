@@ -2,6 +2,8 @@
 """
 from django.conf.urls.defaults import *
 
+from classifieds.views import AdEditView, AdCreationEditView
+
 
 # nested urls
 base_urlpatterns = patterns('classifieds.views',
@@ -13,7 +15,7 @@ base_urlpatterns = patterns('classifieds.views',
         name='classifieds_create_ad_select_category'),
     url(r'^create/(?P<slug>[-\w]+)/$', 'create.create_in_category',
         name='classifieds_create_ad_in_category'),
-    url(r'^create/edit/(?P<pk>[0-9]+)/$', 'create.edit',
+    url(r'^create/edit/(?P<pk>[0-9]+)/$', AdCreationEditView.as_view(),
         name='classifieds_create_ad_edit'),
     url(r'^create/preview/(?P<pk>[0-9]+)/$', 'create.preview',
         name='classifieds_create_ad_preview'),
@@ -31,7 +33,7 @@ urlpatterns = base_urlpatterns
 # top-level urls
 urlpatterns += patterns('classifieds.views',
     url(r'^mine/$', 'manage.mine', name='classifieds_manage_view_all'),
-    url(r'^edit/(?P<pk>[0-9]+)/$', 'manage.edit',
+    url(r'^edit/(?P<pk>[0-9]+)/$', AdEditView.as_view(),
         name='classifieds_manage_ad_edit'),
     url(r'^delete/(?P<pk>[0-9]+)/$', 'manage.delete',
         name='classifieds_manage_ad_delete'),

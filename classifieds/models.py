@@ -229,7 +229,7 @@ class PricingOptions(models.Model):
     def __unicode__(self):
         pricing = {}
         pricing.update(self.PRICING_OPTIONS)
-        return pricing[int(self.name)]
+        return u'%s for $%s' % (pricing[int(self.name)], self.price,)
 
     class Meta:
         ordering = ['price']
@@ -267,7 +267,7 @@ class ZipCode(models.Model):
 class Payment(models.Model):
     ad = models.ForeignKey(Ad)
     paid = models.BooleanField(default=False)
-    paid_on = models.DateTimeField()
+    paid_on = models.DateTimeField(null=True)
     amount = models.DecimalField(max_digits=9, decimal_places=2)
     pricing = models.ForeignKey(Pricing)
     options = models.ManyToManyField(PricingOptions)

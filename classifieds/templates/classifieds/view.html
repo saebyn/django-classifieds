@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
-
-{% load humanize %}
+{% load humanize i18n classifieds %}
 
 {% block head %}
  <script type="text/javascript" src="{{ MEDIA_URL }}js/thumbnails.js"></script>
@@ -12,14 +8,7 @@
 {% block content %}
  {% block ad_create_status %}
   {% if create %}
-   <h1>Post Ad</h1>
-   <ol class="progress">
-    <li>1 | Select</li>
-    <li>2 | Post</li>
-    <li class="selected">3 | Review</li>
-    <li>4 | Checkout</li>
-   </ol>
-   <p><strong>Step 3 :</strong> Please review your post below</p>
+  {% post_ad_progress 3 %}
   {% endif %}
  {% endblock %}
 
@@ -90,4 +79,4 @@
  {% endblock %}
 {% endblock %}
 
-{% block tellafriend %}http://{{ site.domain }}/ads/{{ ad.pk }}{% endblock %}
+{% block tellafriend %}http://{{ site.domain }}{% url classifieds_browse_ad_view ad.pk %}{% endblock %}

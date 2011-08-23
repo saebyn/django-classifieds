@@ -32,33 +32,33 @@
  <body>
   {% block body %}
   <div id="topbar">
-		{% if user.is_authenticated %}
-		<ul class="commands">
+    {% if user.is_authenticated %}
+    <ul class="commands">
      <li><a href="/">{% trans 'Home' %}</a></li>
-		 <li>
+     <li>
       <a href="{% url classifieds.views.create.select_category %}">{% trans 'Post' %}</a>
-		 </li>
-		 <li>
+     </li>
+     <li>
       <a href="{% url classifieds.views.manage.mine %}">{% trans 'Manage' %}</a>
-		 </li>
-		 <li>
+     </li>
+     <li>
       <a href="{% url profiles_edit_profile %}">{% trans 'Settings' %}</a>
-		 </li>
-		 <li>
-      <a href="{% url django.contrib.auth.views.logout %}">{% trans 'Logout' %}</a>
-		 </li>
-		</ul>
-		{% else %}
-		<ul class="commands">
-		 <li><a href="/">Home</a></li>
-		 <li>
-      <a href="{% url django.contrib.auth.views.login %}">{% trans 'Login' %}</a>
-		 </li>
-		 <li>
+     </li>
+     <li>
+      <a href="{% url auth_logout %}">{% trans 'Logout' %}</a>
+     </li>
+    </ul>
+    {% else %}
+    <ul class="commands">
+     <li><a href="/">Home</a></li>
+     <li>
+      <a href="{% url auth_login %}">{% trans 'Login' %}</a>
+     </li>
+     <li>
       <a href="{% url registration_register %}">{% trans 'Register' %}</a>
-		 </li>
-		</ul>
-		{% endif %}
+     </li>
+    </ul>
+    {% endif %}
   </div>
 
   <div id="allcontent"> 
@@ -92,6 +92,7 @@
    {% endblocktrans %}
   </div>
 
+  <script type="text/javascript" defer="true" src="{{ STATIC_URL }}javascript/jquery.js"></script>
   {% block extrajs %}
   {% endblock %}
 

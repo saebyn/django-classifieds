@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
+{% load i18n classifieds %}
 
 {% block head %}
 {{ form.media|safe }}
@@ -23,14 +21,7 @@
 {% block content %}
  {% block ad_create_status %}
   {% if create %}
-   <h1>Post Ad</h1>
-   <ol class="progress">
-    <li>1 | Select</li>
-    <li class="selected">2 | Post</li>
-    <li>3 | Review</li>
-    <li>4 | Checkout</li>
-   </ol>
-   <p class="step"><strong>Step 2 :</strong> Please Enter Ad/Contact Information</p> 
+  {% post_ad_progress 2 %}
   {% endif %}
  {% endblock %}
 <p>(<span class="required">*</span> Required Fields)</p>
