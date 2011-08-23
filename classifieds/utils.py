@@ -2,7 +2,9 @@
 """
 
 from PIL import Image
+import HTMLParser
 import string
+import re
 
 from django.shortcuts import render_to_response
 from django.utils.datastructures import SortedDict
@@ -14,11 +16,10 @@ from django.template.loader import get_template
 from django.template import TemplateDoesNotExist, RequestContext
 
 from django import forms
+from django.forms.fields import EMPTY_VALUES
 
 from classifieds.conf import settings
-
-# classifieds internal modules
-from models import Ad, Field, Category, Pricing, PricingOptions
+from classifieds.models import Ad, Field, Category, Pricing, PricingOptions
 
 
 def render_category_page(request, category, page, context):
@@ -64,7 +65,7 @@ def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
         elif request.GET['order'] == 'asc':
             order = ''
 
-    if 'page' in request.GET.has_key:
+    if 'page' in request.GET:
         page = int(request.GET['page'])
 
     if 'sort' in request.GET and request.GET['sort'] != '':
@@ -143,3 +144,163 @@ def prepare_sforms(fields, fields_left, post=None):
             sforms.append(f)
 
     return sforms
+
+
+class StrippingParser(HTMLParser.HTMLParser):
+    # These are the HTML tags that we will leave intact
+    valid_tags = ('b', 'i', 'br', 'p', 'strong', 'h1', 'h2', 'h3', 'em',
+                  'span', 'ul', 'ol', 'li')
+
+    from htmlentitydefs import entitydefs  # replace entitydefs from sgmllib
+
+    def __init__(self):
+        HTMLParser.HTMLParser.__init__(self)
+        self.result = ""
+        self.endTagList = []
+
+    def handle_data(self, data):
+        if data:
+            self.result = self.result + data
+
+    def handle_charref(self, name):
+        self.result = "%s&#%s;" % (self.result, name)
+
+    def handle_entityref(self, name):
+        if name in self.entitydefs:
+            x = ';'
+        else:
+            # this breaks unstandard entities that end with ';'
+            x = ''
+            self.result = "%s&%s%s" % (self.result, name, x)
+
+    def handle_starttag(self, tag, attrs):
+        """ Delete all tags except for legal ones """
+        if tag in self.valid_tags:
+            self.result = self.result + '<' + tag
+            for k, v in attrs:
+                if string.lower(k[0:2]) != 'on' and \
+                   string.lower(v[0:10]) != 'javascript':
+                    self.result = '%s %s="%s"' % (self.result, k, v)
+
+            endTag = '</%s>' % tag
+            self.endTagList.insert(0, endTag)
+            self.result = self.result + '>'
+
+    def handle_endtag(self, tag):
+        if tag in self.valid_tags:
+            self.result = "%s</%s>" % (self.result, tag)
+            remTag = '</%s>' % tag
+            self.endTagList.remove(remTag)
+
+    def cleanup(self):
+        """ Append missing closing tags """
+        for j in range(len(self.endTagList)):
+            self.result = self.result + self.endTagList[j]
+
+
+def strip(s):
+    """ Strip illegal HTML tags from string s """
+    parser = StrippingParser()
+    parser.feed(s)
+    parser.close()
+    parser.cleanup()
+    return parser.result
+
+
+class TinyMCEWidget(forms.Textarea):
+    def __init__(self, *args, **kwargs):
+        attrs = kwargs.setdefault('attrs', {})
+        if 'class' not in attrs:
+            attrs['class'] = 'tinymce'
+        else:
+            attrs['class'] += ' tinymce'
+
+        super(TinyMCEWidget, self).__init__(*args, **kwargs)
+
+    class Media:
+        js = ('js/tiny_mce/tiny_mce.js', 'js/tinymce_forms.js',)
+
+
+class TinyMCEField(forms.CharField):
+    def clean(self, value):
+        """Validates max_length and min_length. Returns a Unicode object."""
+        if value in EMPTY_VALUES:
+            return u''
+
+        stripped_value = re.sub(r'<.*?>', '', value)
+        stripped_value = string.replace(stripped_value, '&nbsp;', ' ')
+        stripped_value = string.replace(stripped_value, '&lt;', '<')
+        stripped_value = string.replace(stripped_value, '&gt;', '>')
+        stripped_value = string.replace(stripped_value, '&amp;', '&')
+        stripped_value = string.replace(stripped_value, '\n', '')
+        stripped_value = string.replace(stripped_value, '\r', '')
+
+        value_length = len(stripped_value)
+        value_length -= 1
+        if self.max_length is not None and value_length > self.max_length:
+            raise forms.ValidationError(self.error_messages['max_length'] % {'max': self.max_length, 'length': value_length})
+        if self.min_length is not None and value_length < self.min_length:
+            raise forms.ValidationError(self.error_messages['min_length'] % {'min': self.min_length, 'length': value_length})
+
+        return value
+
+
+def field_list(instance):
+    class MockField:
+        def __init__(self, name, field_type, label, required, help_text, enable_wysiwyg, max_length):
+            self.name = name
+            self.field_type = field_type
+            self.label = label
+            self.required = required
+            self.help_text = help_text
+            self.enable_wysiwyg = enable_wysiwyg
+            self.max_length = max_length
+
+    title_field = MockField('title', Field.CHAR_FIELD, _('Title'), True, '', False, 100)
+
+    fields = [title_field]  # all ads have titles
+    fields += list(instance.category.field_set.all())
+    fields += list(Field.objects.filter(category=None))
+    return fields
+
+
+def fields_for_ad(instance):
+    # generate a sorted dict of fields corresponding to the Field model
+    # for the Ad instance
+    fields_dict = SortedDict()
+    fields = field_list(instance)
+    # this really could be refactored
+    for field in fields:
+        if field.field_type == Field.BOOLEAN_FIELD:
+            fields_dict[field.name] = forms.BooleanField(label=field.label, required=False, help_text=field.help_text)
+        elif field.field_type == Field.CHAR_FIELD:
+            widget = forms.TextInput
+            fields_dict[field.name] = forms.CharField(label=field.label, required=field.required, max_length=field.max_length, help_text=field.help_text, widget=widget)
+        elif field.field_type == Field.DATE_FIELD:
+            fields_dict[field.name] = forms.DateField(label=field.label, required=field.required, help_text=field.help_text)
+        elif field.field_type == Field.DATETIME_FIELD:
+            fields_dict[field.name] = forms.DateTimeField(label=field.label, required=field.required, help_text=field.help_text)
+        elif field.field_type == Field.EMAIL_FIELD:
+            fields_dict[field.name] = forms.EmailField(label=field.label, required=field.required, help_text=field.help_text)
+        elif field.field_type == Field.FLOAT_FIELD:
+            fields_dict[field.name] = forms.FloatField(label=field.label, required=field.required, help_text=field.help_text)
+        elif field.field_type == Field.INTEGER_FIELD:
+            fields_dict[field.name] = forms.IntegerField(label=field.label, required=field.required, help_text=field.help_text)
+        elif field.field_type == Field.TIME_FIELD:
+            fields_dict[field.name] = forms.TimeField(label=field.label, required=field.required, help_text=field.help_text)
+        elif field.field_type == Field.URL_FIELD:
+            fields_dict[field.name] = forms.URLField(label=field.label, required=field.required, help_text=field.help_text)
+        elif field.field_type == Field.SELECT_FIELD:
+            options = field.options.split(',')
+            fields_dict[field.name] = forms.ChoiceField(label=field.label, required=field.required, help_text=field.help_text, choices=zip(options, options))
+        elif field.field_type == Field.TEXT_FIELD:
+            if field.enable_wysiwyg:
+                widget = TinyMCEWidget
+                field_type = TinyMCEField
+            else:
+                widget = forms.Textarea
+                field_type = forms.CharField
+
+            fields_dict[field.name] = field_type(label=field.label, required=field.required, help_text=field.help_text, max_length=field.max_length, widget=widget)
+
+    return fields_dict
