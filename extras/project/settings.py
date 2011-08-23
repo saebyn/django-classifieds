@@ -110,6 +110,7 @@ INSTALLED_APPS = (
     'profiles',
     'django.contrib.humanize',
     'south',
+    'sorl.thumbnail',
 
     'django_nose'
 )
