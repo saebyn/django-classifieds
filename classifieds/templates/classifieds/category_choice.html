@@ -6,18 +6,13 @@
  {% ifequal type "create" %}
   {% post_ad_progress 1 %}
  {% endifequal %}
- {% ifequal type "search" %}
-  <h1>{% trans 'Select Category to Search' %}</h1>
- {% endifequal %}
  {% endblock %}
 
 <ul class="category-list">
 {% for category in categories %}
- {% ifequal type "search" %}
- <li><span>{{ category.description }}</span><a class="button" href="{% url classifieds.views.browse.search_in_category category.pk %}">{{ category.name }}</a></li>
- {% endifequal %}
  {% ifequal type "create" %}
- <li><span>{{ category.description }}</span><a class="button" href="{% url classifieds.views.create.create_in_category category.slug %}">{{ category.name }}</a></li>
+ <li><span>{{ category.description }}</span><a class="button" href="{% url classifieds_create_ad_in_category category.slug %}">{{ category.name }}</a></li>
  {% endifequal %}
-{% endfor %}
+ {% endfor %}
+</ul>
 {% endblock %}

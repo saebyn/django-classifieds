@@ -20,6 +20,7 @@ from django.http import HttpResponse
 from django.forms.fields import EMPTY_VALUES
 
 from classifieds.conf import settings
+from classifieds.search import SelectForm, searchForms
 from classifieds.models import Ad, Field, Category, Pricing, PricingOptions
 
 

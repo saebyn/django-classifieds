@@ -1,19 +1,18 @@
 import datetime
 
-from django.shortcuts import render_to_response, get_object_or_404
-from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django import forms
-from django.http import HttpResponseRedirect, Http404
+from django.http import Http404
 
+from classifieds.models import Category, Ad, Field
 from classifieds.utils import context_sortable, render_category_page, \
                               prepare_sforms
-from classifieds.search import *
 
 
 def category_overview(request):
     context = {}
-    categories = Category.objects.all().order_by('sort_order')
+    context['categories'] = Category.objects.order_by('sort_order')
     return render_to_response('classifieds/category_overview.html', context,
                               context_instance=RequestContext(request))
 
@@ -27,18 +26,6 @@ def view(request, pk):
         raise Http404
 
     return render_category_page(request, ad.category, 'view.html', {'ad': ad})
-
-
-# I may remove all of the rest... to replace with haystack search
-def search(request):
-    """
-    List the categories available and send the user to the search_in_category
-    view.
-    """
-    return render_to_response('classifieds/category_choice.html',
-                              {'categories': Category.objects.all(),
-                               'type': 'search'},
-                              context_instance=RequestContext(request))
 
 
 def search_in_category(request, slug):
@@ -82,7 +69,7 @@ def search_results(request, slug):
             if request.method == 'POST':
                 request.session['search'] = {}
                 request.session['search'].update(request.POST)
-                return redirect('classifieds.views.search_results', categoryId)
+                return redirect('classifieds_browse_search_results', slug=slug)
 
             for f in sforms:
                 ads = f.filter(ads)

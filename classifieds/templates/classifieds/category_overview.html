@@ -1,7 +1,10 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
+{% load i18n %}
 
 {% block content %}
+<ul class="category-list">
+{% for category in categories %}
+<li><span>{{ category.description }}</span><a class="button" href="{% url classifieds_browse_category_search category.slug %}">{% trans 'Search' %} {{ category.name }}</a></li>
+{% endfor %}
+</ul>
 {% endblock content %}

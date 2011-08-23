@@ -20,9 +20,10 @@ base_urlpatterns = patterns('classifieds.views',
     url(r'^create/preview/(?P<pk>[0-9]+)/$', 'create.preview',
         name='classifieds_create_ad_preview'),
 
-    (r'^search/$', 'browse.search'),
-    (r'^search/([-\w]+)/$', 'browse.search_in_category'),
-    (r'^search_results/([-\w]+)/$', 'browse.search_results'),
+    url(r'^search/(?P<slug>[-\w]+)/$', 'browse.search_in_category',
+        name='classifieds_browse_category_search'),
+    url(r'^search/results/(?P<slug>[-\w]+)/$', 'browse.search_results',
+        name='classifieds_browse_search_results'),
     url(r'^(?P<pk>[0-9]+)/$', 'browse.view',
         name='classifieds_browse_ad_view'),
 )
