@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n classifieds %}
+{% load i18n classifieds thumbnail %}
 
 {% block head %}
 {{ form.media|safe }}
@@ -58,8 +58,12 @@
       {{ imageform.id }}
       <label>Picture #{{ forloop.counter }}</label> {{ imageform.full_photo }}
       {{ imageform.DELETE.label_tag }}{{ imageform.DELETE }}
-      {% if imageform.initial.thumb_photo %}
-      <img src="{{ MEDIA_URL }}{{ imageform.initial.thumb_photo }}" alt="{}" />
+      {% if imageform.initial.full_photo %}
+       {% thumbnail imageform.initial.full_photo "1000" as big %}
+        {% thumbnail imageform.initial.full_photo "50x50" crop="center" as small %}
+         <a href="{{ big.url }}" title="View full-size image"><img src="{{ small.url }}" alt="Photo Thumbnail"></a>
+        {% endthumbnail %}
+       {% endthumbnail %}
       {% endif %}
   	 </td>
   	</tr>

@@ -10,10 +10,11 @@ from django.template import Context, loader
 from django.utils.translation import ugettext as _
 from django.core.mail import send_mail
 
+from sorl.thumbnail import ImageField
+
 from classifieds.conf import settings
 
 import datetime
-from PIL import Image
 
 
 class ImageFormat(models.Model):
@@ -166,35 +167,7 @@ from os.path import basename
 
 class AdImage(models.Model):
     ad = models.ForeignKey(Ad)
-    full_photo = models.ImageField(upload_to='uploads/', blank=True)
-    thumb_photo = models.ImageField(upload_to='uploads/thumbnails/',
-                                    blank=True)
-
-    def generate_thumbnail(self):
-        image = Image.open(self.full_photo.path)
-        if image.mode != "RGB":
-            image = image.convert('RGB')
-
-        # resize
-        image = image.resize((128, 128))
-
-        # save as thumb_photo
-        f = StringIO.StringIO()
-        image.save(f, "JPEG")
-
-        self.thumb_photo.save(basename(self.full_photo.path), ContentFile(f.getvalue()))
-
-    def resize(self):
-        max_width = self.ad.category.images_max_width
-        max_height = self.ad.category.images_max_height
-        image = Image.open(self.full_photo.path)
-        if image.mode != "RGB":
-            image = image.convert('RGB')
-
-        height, width = image.size
-        if height > max_height or width > max_width:
-            image.thumbnail((max_width, max_height), Image.ANTIALIAS)
-            image.save(self.full_photo.path)
+    full_photo = ImageField(upload_to='uploads/', blank=True)
 
 
 class FieldValue(models.Model):

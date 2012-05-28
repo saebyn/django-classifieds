@@ -3,7 +3,7 @@
   $Id$
 {% endcomment %}
 
-{% load humanize %}
+{% load humanize thumbnail %}
 
 {% block sidebar %}
 <ul>
@@ -27,8 +27,12 @@
   {% for ad in page.object_list %}
    <div class="ad{% if forloop.first %} first{% endif %}{% if ad.is_featured %} featured{% endif %}">
     <div class="description">
-    {% if ad.adimage_set.all.0.get_thumb_photo_url %}
-     <img src="{{ ad.adimage_set.all.0.get_thumb_photo_url }}" alt="Photo Thumbnail" />
+    {% if ad.adimage_set.all.0.full_photo %}
+     {% thumbnail ad.adimage_set.all.0.full_photo "1000" as big %}
+      {% thumbnail ad.adimage_set.all.0.full_photo "50x50" crop="center" as small %}
+       <a href="{{ big.url }}" title="View full-size image"><img src="{{ small.url }}" alt="Photo Thumbnail"></a>
+      {% endthumbnail %}
+     {% endthumbnail %}
     {% else %}
      <span class="img">No Photo</span>
     {% endif %}

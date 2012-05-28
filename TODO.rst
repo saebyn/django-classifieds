@@ -9,6 +9,14 @@
 
   - Utilities
 
+* Make the app a proper python package (setup.py, fix install instructions, add to pypi)
+
+* Try http://mvpdev.github.com/django-eav/
+
+* Try django-filters for search functionality
+
+  - Fork the project to support EAV fields
+
 * Rework how app settings are done.
 
 * Contact form

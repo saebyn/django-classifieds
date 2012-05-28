@@ -50,9 +50,8 @@ class AdEditView(BaseUpdateView):
 
     def form_valid(self, form):
         if self.imagesformset.is_valid():
-            for image in self.object.adimage_set.all():
-                image.resize()
-                image.generate_thumbnail()
+            self.imagesformset.save()
+
         return super(AdEditView, self).form_valid(form)
 
     def get(self, request, *args, **kwargs):

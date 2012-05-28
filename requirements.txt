@@ -6,3 +6,4 @@ django-profiles==0.2
 django-registration==0.7
 sorl-thumbnail==11.05.2
 nose==1.1.2
+PIL==1.1.7

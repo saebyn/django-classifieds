@@ -62,9 +62,11 @@
 
  <div class="images">
  {% for image in ad.adimage_set.all %}
-  {% if image.get_thumb_photo_url %}
-   <a href="{{ image.get_full_photo_url }}"><img src="{{ image.get_thumb_photo_url }}" alt="Thumbnail" class="thumbnail" /></a>
-  {% endif %}
+  {% thumbnail image.full_photo "1000" as big %}
+   {% thumbnail image.full_photo "50x50" crop="center" as small %}
+    <a href="{{ big.url }}" title="View full-size image"><img src="{{ small.url }}" alt="Photo Thumbnail"></a>
+   {% endthumbnail %}
+  {% endthumbnail %}
  {% endfor %}
  </div>
 </div>
