@@ -70,9 +70,6 @@ class TestAdCreationEditing(FancyTestCase):
         self.assertIn('form', response.context)
         self.assertIn('imagesformset', response.context)
 
-    def test_ad_edit_generates_thumbnails(self):
-        self.fail()
-
     def test_ad_edit_has_custom_fields(self):
         response = self.get("classifieds_create_ad_edit", pk=1)
         self.assertIn('Test Field', response.context['form'].fields.keys())
