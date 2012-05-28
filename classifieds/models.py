@@ -160,11 +160,6 @@ class Ad(models.Model):
         return False
 
 
-import StringIO
-from django.core.files.base import ContentFile
-from os.path import basename
-
-
 class AdImage(models.Model):
     ad = models.ForeignKey(Ad)
     full_photo = ImageField(upload_to='uploads/', blank=True)

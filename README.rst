@@ -15,7 +15,7 @@ Specific version details are in `requirements.txt`
 `django-registration`
 `django-profiles`
 
-`django-nose` for running tests
-
 `south` for migration support
 
+
+Additional requirements for running tests are in `dev_requirements.txt`.
