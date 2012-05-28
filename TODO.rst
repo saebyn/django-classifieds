@@ -7,6 +7,8 @@
 
     1. Ad browsing / searching
 
+    2. Manage
+
   - Utilities
 
 * Make the app a proper python package (setup.py, fix install instructions, add to pypi)
@@ -21,15 +23,15 @@
 
 * Contact form
 
-* Use queueing solution for backend image processing / thumbnail generation.
+* Debug image uploading / replacement during ad posting / edit process. (verify that sorl is working correctly)
+
+* Use queueing solution for backend image processing / thumbnail generation. ??
 
 * Field type model to replace utils.fields_for_ad
   
   - model method that returns the correct form field object
 
   - initial_data fixture provides useful fieldtypes
-
-* Debug image uploading / replacement during ad posting / edit process.
 
 * Refactor view code
 
