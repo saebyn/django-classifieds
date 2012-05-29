@@ -50,11 +50,16 @@ def clean_adimageformset(self):
             continue
 
         if form.cleaned_data['full_photo'].size > max_size:
-            raise forms.ValidationError(_('Maximum image size is %s KB') % str(max_size / 1024))
+            raise forms.ValidationError(_(u'Maximum image size is %s KB') % \
+                    str(max_size / 1024))
 
         im = Image.open(form.cleaned_data['full_photo'].file)
-        if self.instance.category.images_allowed_formats.filter(format=im.format).count() == 0:
-            raise forms.ValidationError(_('Your image must be in one of the following formats: ') + ', '.join(self.instance.category.images_allowed_formats.values_list('format', flat=True)))
+        allows_formats = self.instance.catoegy.images_allowed_formats
+        if allowed_formats.filter(format=im.format).count() == 0:
+            raise forms.ValidationError(
+                    _(u'Your image must be in one of the following formats: ')\
+                    + ', '.join(allowed_formats.values_list('format',
+                                                            flat=True)))
 
 
 def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
@@ -90,7 +95,6 @@ AND `classifieds_payment`.`paid_on` < NOW()
 AND DATE_ADD( `classifieds_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
 DAY ) > NOW()"""}, select_params=[PricingOptions.FEATURED_LISTING]).extra(order_by=['-featured', order + sort])
     else:
-        # sometimes I surprise myself
         ads_sorted = ads.extra(select=SortedDict([('fvorder', 'select value from classifieds_fieldvalue LEFT JOIN classifieds_field on classifieds_fieldvalue.field_id = classifieds_field.id where classifieds_field.name = %s and classifieds_fieldvalue.ad_id = classifieds_ad.id'), ('featured', """SELECT 1
 FROM `classifieds_payment_options`
 LEFT JOIN `classifieds_payment` ON `classifieds_payment_options`.`payment_id` = `classifieds_payment`.`id`
@@ -275,7 +279,7 @@ def fields_for_ad(instance):
     # for the Ad instance
     fields_dict = SortedDict()
     fields = field_list(instance)
-    # this really could be refactored
+    # this really, really should be refactored
     for field in fields:
         if field.field_type == Field.BOOLEAN_FIELD:
             fields_dict[field.name] = forms.BooleanField(label=field.label, required=False, help_text=field.help_text)
@@ -307,6 +311,10 @@ def fields_for_ad(instance):
                 widget = forms.Textarea
                 field_type = forms.CharField
 
-            fields_dict[field.name] = field_type(label=field.label, required=field.required, help_text=field.help_text, max_length=field.max_length, widget=widget)
+            fields_dict[field.name] = field_type(label=field.label,
+                                                 required=field.required,
+                                                 help_text=field.help_text,
+                                                 max_length=field.max_length,
+                                                 widget=widget)
 
     return fields_dict

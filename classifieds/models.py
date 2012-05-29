@@ -34,16 +34,16 @@ class Category(models.Model):
     contact_form_upload_file_extensions = models.CharField(max_length=200,
                                                      default="txt,doc,odf,pdf")
     images_max_count = models.IntegerField(default=0)
-    images_max_width = models.IntegerField(help_text=_('Maximum width in pixels.'),
+    images_max_width = models.IntegerField(help_text=_(u'Maximum width in pixels.'),
                                            default=1024)
-    images_max_height = models.IntegerField(help_text=_('Maximum height in pixels.'),
+    images_max_height = models.IntegerField(help_text=_(u'Maximum height in pixels.'),
                                             default=1024)
-    images_max_size = models.IntegerField(help_text=_('Maximum size in bytes.'),
+    images_max_size = models.IntegerField(help_text=_(u'Maximum size in bytes.'),
                                           default=2 ** 20)
     images_allowed_formats = models.ManyToManyField(ImageFormat, blank=True)
     description = models.TextField(default='')
     sortby_fields = models.CharField(max_length=200,
-                                     help_text=_('A comma separated list of field names that should show up as sorting options.'),
+                                     help_text=_(u'A comma separated list of field names that should show up as sorting options.'),
                                      blank=True)
     sort_order = models.PositiveIntegerField(default=0)
 
@@ -89,10 +89,10 @@ class Field(models.Model):
     field_type = models.IntegerField(choices=FIELD_CHOICES)
     help_text = models.TextField(blank=True)
     max_length = models.IntegerField(null=True, blank=True)
-    enable_counter = models.BooleanField(help_text=_('This enabled the javascript counter script for text fields.'))
-    enable_wysiwyg = models.BooleanField(help_text=_('This enables the text formatting javascript widget for text fields.'))
+    enable_counter = models.BooleanField(help_text=_(u'This enabled the javascript counter script for text fields.'))
+    enable_wysiwyg = models.BooleanField(help_text=_(u'This enables the text formatting javascript widget for text fields.'))
     required = models.BooleanField()
-    options = models.TextField(help_text=_('A comma separated list of options [only for the dropdown list field]'),
+    options = models.TextField(help_text=_(u'A comma separated list of options [only for the dropdown list field]'),
                                blank=True)
 
     def __unicode__(self):
@@ -175,7 +175,7 @@ class FieldValue(models.Model):
 
 
 class Pricing(models.Model):
-    length = models.IntegerField()
+    length = models.IntegerField(help_text=_(u'Period being payed for in days'))
     price = models.DecimalField(max_digits=9, decimal_places=2)
 
     def __unicode__(self):

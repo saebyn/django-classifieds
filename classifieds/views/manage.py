@@ -38,7 +38,7 @@ class AdDeleteView(DeleteView):
         messages.success(request, _(u'Ad deleted.'))
 
         return response
- 
+
     def get_object(self, queryset=None):
         obj = super(AdDeleteView, self).get_object(queryset)
 

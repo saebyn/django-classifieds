@@ -14,7 +14,7 @@ class AdEditView(BaseUpdateView):
     form_class = AdForm
     context_object_name = 'ad'
     page = 'edit.html'
-  
+
     def get_category(self):
         return self.object.category
 
@@ -22,7 +22,7 @@ class AdEditView(BaseUpdateView):
         category = self.get_category()
         return render_category_page(self.request, category,
                                     self.page, context)
-    
+
     def get_success_url(self):
         return reverse('classifieds_manage_view_all')
 

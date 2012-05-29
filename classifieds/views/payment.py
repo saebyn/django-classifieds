@@ -69,12 +69,12 @@ def checkout(request, pk):
 
 
 def pricing(request):
-  return render_to_response('classifieds/pricing.js',
-                            {'prices': Pricing.objects.all(),
-                             'options': PricingOptions.objects.all()},
-                            context_instance=RequestContext(request))
+    return render_to_response('classifieds/pricing.js',
+                              {'prices': Pricing.objects.all(),
+                               'options': PricingOptions.objects.all()},
+                              context_instance=RequestContext(request))
 
-  
+
 @login_required
 def view_bought(request, pk):
     messages.success(_("""Your ad has been successfully posted.

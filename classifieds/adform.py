@@ -73,12 +73,14 @@ class AdForm(BaseForm):
             for word in settings.FORBIDDEN_WORDS:
                 value = value.replace(word, '')
 
-            # title is stored directly in the ad, unlike all other editable fields
+            # The title is stored directly in the ad,
+            # unlike all other editable fields.
             if field.name == 'title':
                 self.instance.title = value
                 self.instance.save()
             else:
-                # check to see if field.fieldvalue_set has a value with ad=self.instance
+                # Check to see if field.fieldvalue_set has a value with
+                # ad=self.instance
                 try:
                     # if it does, update
                     fv = field.fieldvalue_set.get(ad=self.instance)
