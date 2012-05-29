@@ -9,12 +9,12 @@ import os.path
 
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
-
 from django.core.paginator import Paginator, InvalidPage
-
 from django.template.loader import get_template
 from django.template import TemplateDoesNotExist, RequestContext
+from django.forms import ValidationError
 
+<<<<<<< HEAD
 from django import forms
 from django.http import HttpResponse
 from django.forms.fields import EMPTY_VALUES
@@ -27,6 +27,11 @@ from classifieds.models import Ad, Field, Category, Pricing, PricingOptions
 def category_template_name(category, page):
     return os.path.join(u'classifieds/category',
                         category.template_prefix, page)
+=======
+# classifieds internal modules
+from classifieds.conf import settings
+from classifieds.models import Ad, Field, Category, Pricing, PricingOptions
+>>>>>>> master
 
 
 def render_category_page(request, category, page, context):
@@ -43,6 +48,7 @@ def render_category_page(request, category, page, context):
 def clean_adimageformset(self):
     max_size = self.instance.category.images_max_size
     for form in self.forms:
+<<<<<<< HEAD
         try:
             if not hasattr(form.cleaned_data['full_photo'], 'file'):
                 continue
@@ -61,6 +67,21 @@ def clean_adimageformset(self):
                     + ', '.join(allowed_formats.values_list('format',
                                                             flat=True)))
 
+=======
+      try:
+        if not hasattr(form.cleaned_data['full_photo'], 'file'):
+          continue
+      except:
+        continue
+
+      if form.cleaned_data['full_photo'].size > max_size:
+        raise ValidationError(_('Maximum image size is ' + str(max_size/1024) + ' KB'))
+      
+      im = Image.open(form.cleaned_data['full_photo'].file)
+      if self.instance.category.images_allowed_formats.filter(format=im.format).count() == 0:
+        raise ValidationError(_('Your image must be in one of the following formats: ') + string.join(self.instance.category.images_allowed_formats.values_list('format', flat=True), ','))
+    
+>>>>>>> master
 
 def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
     order = '-'

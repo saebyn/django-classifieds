@@ -3,7 +3,7 @@
 
 from django import forms
 from django.utils.translation import ugettext as _
-from models import Pricing, PricingOptions
+from classifieds.models import Pricing, PricingOptions
 
 
 # TODO make inlineformset class for ad images
@@ -34,6 +34,6 @@ class SubscribeForm(forms.Form):
         email = self.cleaned_data["email_address"]
 
         if User.objects.filter(email=email).count() > 0:
-            raise forms.ValidationError(_("The e-mail address you entered has already been registered."))
+            raise forms.ValidationError(_(u"The e-mail address you entered has already been registered."))
 
         return email

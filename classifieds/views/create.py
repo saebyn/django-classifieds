@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 
-
 from classifieds.models import Ad, Category, Pricing
 from classifieds.utils import render_category_page
 

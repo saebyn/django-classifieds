@@ -13,7 +13,6 @@ value submitted via one of our forms.
 The model for the 'ad', which is what the field values are for, has several
 fields. None of those fields except for 'title' will be part of the generated
 forms.
-
 """
 
 from django.utils.datastructures import SortedDict
@@ -26,7 +25,7 @@ import re
 
 from classifieds.conf import settings
 from classifieds.models import Field, FieldValue
-from classifieds.utils import fields_for_ad, field_list, strip
+from classifieds.utils import fields_for_ad, field_list, stripHTML
 
 __all__ = ('AdForm',)
 
@@ -65,7 +64,7 @@ class AdForm(BaseForm):
 
         for field in fields:
             if field.enable_wysiwyg:
-                value = unicode(strip(cleaned_data[field.name]))
+                value = unicode(stripHTML(cleaned_data[field.name]))
             else:
                 value = unicode(cleaned_data[field.name])
 
