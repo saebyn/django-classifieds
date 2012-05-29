@@ -3,6 +3,7 @@
 from django.conf.urls.defaults import *
 
 from classifieds.views import AdEditView, AdCreationEditView
+from classifieds.views.manage import AdDeleteView
 
 
 # nested urls
@@ -36,7 +37,7 @@ urlpatterns += patterns('classifieds.views',
     url(r'^mine/$', 'manage.mine', name='classifieds_manage_view_all'),
     url(r'^edit/(?P<pk>[0-9]+)/$', AdEditView.as_view(),
         name='classifieds_manage_ad_edit'),
-    url(r'^delete/(?P<pk>[0-9]+)/$', 'manage.delete',
+    url(r'^delete/(?P<pk>[0-9]+)/$', AdDeleteView.as_view(),
         name='classifieds_manage_ad_delete'),
 
     (r'^new/(?P<pk>[0-9]+)/$', 'payment.view_bought'),

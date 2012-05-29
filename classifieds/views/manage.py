@@ -1,8 +1,11 @@
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render_to_response, redirect
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.template import RequestContext
 from django.contrib import messages
 from django.utils.translation import ugettext as _
+from django.views.generic import DeleteView
 
 
 from classifieds.models import Ad
@@ -18,16 +21,28 @@ def mine(request):
                               context_instance=RequestContext(request))
 
 
-# TODO class-based view with GET/POST confirmation thingy
-@login_required
-def delete(request, pk):
-    # find the ad, if available
-    ad = get_object_or_404(Ad, pk=pk, active=True, user=request.user)
+class AdDeleteView(DeleteView):
+    model = Ad
 
-    ad.delete()
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AdDeleteView, self).dispatch(request, *args, **kwargs)
 
-    # create status message
-    messages.success(request, _('Ad deleted.'))
+    def get_success_url(self):
+        return redirect('classifieds_manage_view_all')
 
-    # send the user back to their ad list
-    return redirect('classifieds_manage_view_all')
+    def delete(self, request, *args, **kwargs):
+        response = super(AdDeleteView, self).delete(request, *args, **kwargs)
+
+        # create status message
+        messages.success(request, _(u'Ad deleted.'))
+
+        return response
+ 
+    def get_object(self, queryset=None):
+        obj = super(AdDeleteView, self).get_object(queryset)
+
+        if not obj.user == self.request.user:
+            raise Http404
+
+        return obj

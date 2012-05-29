@@ -29,7 +29,7 @@ class TestAdManage(FancyTestCase):
 
     def test_manage_delete_get_renders_confirmation_template(self):
         response = self.get('classifieds_manage_ad_delete', pk=18)
-        self.assertTemplateUsed(response, 'classifieds/ad/delete_confirm.html')
+        self.assertTemplateUsed(response, 'classifieds/ad_confirm_delete.html')
 
     def test_manage_delete_post_deletes_ad(self):
         response = self.post('classifieds_manage_ad_delete', pk=18)
@@ -40,9 +40,6 @@ class TestAdManage(FancyTestCase):
         response = self.get('classifieds_manage_ad_edit', pk=18)
         self.assertIn('form', response.context)
         self.assertIn('imagesformset', response.context)
-
-    def test_manage_edit_save_updates_thumbnails(self):
-        self.fail()
 
     def test_manage_edit_save_redirects_to_view_all(self):
         params = {'adimage_set-TOTAL_FORMS': u'3',
