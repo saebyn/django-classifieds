@@ -1,17 +1,7 @@
 
-* Verify all functionality works with Django 1.3 (see unit testing below)
-
-* Unit testing
-
-  - Views
-
-    1. Ad browsing / searching
-
-    2. Manage
-
-  - Utilities
-
 * Make the app a proper python package (setup.py, fix install instructions, add to pypi)
+
+* Skip payment step when a free pricing option is chosen
 
 * Try http://mvpdev.github.com/django-eav/
 
