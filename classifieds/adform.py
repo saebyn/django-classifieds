@@ -25,7 +25,7 @@ import re
 
 from classifieds.conf import settings
 from classifieds.models import Field, FieldValue
-from classifieds.utils import fields_for_ad, field_list, stripHTML
+from classifieds.utils import fields_for_ad, field_list, strip
 
 __all__ = ('AdForm',)
 
@@ -64,7 +64,7 @@ class AdForm(BaseForm):
 
         for field in fields:
             if field.enable_wysiwyg:
-                value = unicode(stripHTML(cleaned_data[field.name]))
+                value = unicode(strip(cleaned_data[field.name]))
             else:
                 value = unicode(cleaned_data[field.name])
 
