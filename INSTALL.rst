@@ -8,11 +8,12 @@ Installation
 
 3. Add:
 
-  'classifieds'
-  'paypal.standard.ipn'
-  'registration'
-  'profiles'
-  'django.contrib.humanize'
+  'classifieds',
+  'paypal.standard.ipn',
+  'registration',
+  'profiles',
+  'django.contrib.humanize',
+  'sorl.thumbnail'
 
   and optionally 'south'
 
