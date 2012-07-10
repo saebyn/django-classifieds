@@ -315,5 +315,7 @@ def fields_for_ad(instance):
                                                  help_text=field.help_text,
                                                  max_length=field.max_length,
                                                  widget=widget)
+        else:
+            raise NotImplementedError(u'Unknown field type "%s"' % field.get_field_type_display())
 
     return fields_dict

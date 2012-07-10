@@ -10,7 +10,7 @@ from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 
 from classifieds.models import Ad, Pricing, PricingOptions, Payment
-from classifieds.forms import CheckoutForm
+from classifieds.forms.misc import CheckoutForm
 from classifieds.conf import settings as app_settings
 from classifieds import views
 
