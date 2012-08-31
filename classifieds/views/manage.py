@@ -1,5 +1,6 @@
 # vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -30,7 +31,7 @@ class AdDeleteView(DeleteView):
         return super(AdDeleteView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return redirect('classifieds_manage_view_all')
+        return reverse('classifieds_manage_view_all')
 
     def delete(self, request, *args, **kwargs):
         response = super(AdDeleteView, self).delete(request, *args, **kwargs)

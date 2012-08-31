@@ -1,5 +1,5 @@
 
-* Make the app a proper python package (setup.py, fix install instructions, add to pypi)
+* Make the app a proper python package (improve install instructions, add to pypi)
 
 * Implement the image upload field type (GH issue #2)
 
