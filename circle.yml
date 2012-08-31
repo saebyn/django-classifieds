@@ -1,0 +1,13 @@
+machine:
+  timezone:
+    America/Los_Angeles
+dependencies:
+  override:
+    - pip install -r requirements.txt
+    - pip install -r dev_requirements.txt
+    - pip install mysql-python
+test:
+  override:
+    - python extras/project/manage.py test classifieds --settings=settings_circleci:
+      environment:
+        PYTHONPATH=extras/project/:.

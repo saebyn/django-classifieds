@@ -1,4 +1,4 @@
-from django.test import TestCase
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 from django.core.urlresolvers import reverse
 
 from classifieds.tests.test_views import FancyTestCase
@@ -33,7 +33,7 @@ class TestAdCreation(FancyTestCase):
         self.assertTemplateUsed(response, 'classifieds/category_choice.html')
 
     def test_create_in_category_creates_inactive_ad(self):
-        response = self.get('classifieds_create_ad_in_category', slug='test')
+        self.get('classifieds_create_ad_in_category', slug='test')
         from classifieds.models import Ad
         ad = Ad.objects.get()  # There can be only one... right now anyway
         self.assertFalse(ad.active)
@@ -91,7 +91,7 @@ class TestAdCreationEditing(FancyTestCase):
                   'adimage_set-MAX_NUM_FORMS': u'3',
                   'title': 'Test Title',
                   'Test Field': '2011-08-22 08:00:00'}
-        response = self.client.post(reverse("classifieds_create_ad_edit",
+        self.client.post(reverse("classifieds_create_ad_edit",
                                     kwargs=dict(pk=1)), params)
         from classifieds.models import Ad
         self.assertEqual(Ad.objects.get(pk=1).title, 'Test Title')
@@ -102,11 +102,12 @@ class TestAdCreationEditing(FancyTestCase):
                   'adimage_set-MAX_NUM_FORMS': u'3',
                   'title': 'Test Title',
                   'Test Field': '2011-08-22 08:00:00'}
-        response = self.client.post(reverse("classifieds_create_ad_edit",
+        self.client.post(reverse("classifieds_create_ad_edit",
                                     kwargs=dict(pk=1)), params)
         from classifieds.models import Ad
+        # depends on local timezone being UTC-7
         self.assertEqual(Ad.objects.get(pk=1).field('Test Field'),
-                         '2011-08-22 08:00:00')
+                '2011-08-22 08:00:00-07:00')
 
     def test_ad_preview_nonauthed_user_cant_see_ad(self):
         self.client.logout()

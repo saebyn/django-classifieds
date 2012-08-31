@@ -1,9 +1,8 @@
-import datetime
-
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from django.utils.translation import ugettext as _
+from django.utils import timezone
 
 from classifieds.models import Ad, Category, Pricing
 from classifieds.utils import render_category_page
@@ -25,7 +24,7 @@ def select_category(request):
     view.
     """
     return render_to_response('classifieds/category_choice.html',
-                              {'categories': Category.objects.all(),
+            {'categories': Category.objects.all(),
                                'type': 'create'},
                               context_instance=RequestContext(request))
 
@@ -36,7 +35,7 @@ def create_in_category(request, slug):
     category = get_object_or_404(Category, slug=slug)
 
     ad = Ad.objects.create(category=category, user=request.user,
-                           expires_on=datetime.datetime.now(), active=False)
+                           expires_on=timezone.now(), active=False)
     ad.save()
     return redirect('classifieds_create_ad_edit', pk=ad.pk)
 

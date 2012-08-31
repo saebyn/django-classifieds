@@ -1,4 +1,4 @@
-from django.test import TestCase
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 from django.core.urlresolvers import reverse
 
 from classifieds.tests.test_views import FancyTestCase
@@ -41,3 +41,23 @@ class TestAdBrowsing(FancyTestCase):
     def test_category_overview_uses_template(self):
         response = self.get('classifieds_browse_categories')
         self.assertTemplateUsed(response, 'classifieds/category_overview.html')
+
+    def test_search_initial_uses_search_template(self):
+        response = self.get('classifieds_browse_category_search', slug='test')
+        self.assertTemplateUsed(response, 'classifieds/search.html')
+
+    def test_search_redirects_to_results(self):
+        post = {}
+        response = self.post('classifieds_browse_category_search',
+                params=post, slug='test')
+        self.assertRedirects(response, reverse('classifieds_browse_search_results',
+            kwargs=dict(slug='test')))
+
+    def test_search_uses_list_template(self):
+        post = {'Test Field': 'test',
+                'Test Text Field': 'test'}
+        self.post('classifieds_browse_category_search',
+                params=post, slug='test')
+        response = self.get('classifieds_browse_search_results',
+                slug='test')
+        self.assertTemplateUsed(response, 'classifieds/list.html')

@@ -1,7 +1,10 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 """
+Database models for django-classifieds.
 """
 
 from django.db import models
+from django.db.models.query import QuerySet
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 
@@ -98,8 +101,55 @@ class Field(models.Model):
     def __unicode__(self):
         return self.name + u' field for ' + self.category.name
 
+class AdQuerySet(QuerySet):
+    def sort_featured_ads(self, suborder=None):
+        qs = self\
+            .extra(select={'featured':
+                    '''SELECT 1
+                     FROM `classifieds_payment_options`
+                     LEFT JOIN `classifieds_payment` ON
+                       `classifieds_payment_options`.`payment_id` = `classifieds_payment`.`id`
+                     LEFT JOIN `classifieds_pricing` ON
+                       `classifieds_pricing`.`id` = `classifieds_payment`.`pricing_id`
+                     LEFT JOIN `classifieds_pricingoptions` ON
+                       `classifieds_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
+                     WHERE `classifieds_pricingoptions`.`name` = %s AND
+                       `classifieds_payment`.`ad_id` = `classifieds_ad`.`id` AND
+                       `classifieds_payment`.`paid` = 1 AND
+                       `classifieds_payment`.`paid_on` < NOW() AND
+                       DATE_ADD(`classifieds_payment`.`paid_on`,
+                                INTERVAL `classifieds_pricing`.`length` DAY) > NOW()'''},
+                   select_params=[PricingOptions.FEATURED_LISTING])
+
+        if suborder:
+            return qs.extra(order_by=['-featured', suborder])
+        else:
+            return qs
+
+    def order_by_field(self, field_order):
+        field = order = field_order
+        if field_order[0] == '-':
+            field = field_order[1:]
+        
+        return self\
+                .extra(select={'fvorder',
+                        '''SELECT value from classifieds_fieldvalue
+                         LEFT JOIN classifieds_field ON
+                            classifieds_fieldvalue.field_id = classifieds_field.id
+                         WHERE classifieds_field.name = %s AND
+                               classifieds_fieldvalue.ad_id = classifieds_ad.id'''},
+                       select_params=[field])\
+                .extra(order_by=['-featured', order])
+
+
+class AdManager(models.Manager):
+    def get_query_set(self):
+        return AdQuerySet(self.model)
+
 
 class Ad(models.Model):
+    objects = AdManager()
+
     category = models.ForeignKey(Category)
     user = models.ForeignKey(User)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -116,10 +166,7 @@ class Ad(models.Model):
         return u'Ad #' + unicode(self.pk) + ' titled "' + self.title + u'" in category ' + self.category.name
 
     def expired(self):
-        if self.expires_on <= datetime.datetime.now():
-            return True
-        else:
-            return False
+        return self.expires_on <= datetime.datetime.now()
 
     def fields(self):
         fields_list = []
@@ -241,6 +288,7 @@ class Payment(models.Model):
     options = models.ManyToManyField(PricingOptions)
 
     def complete(self, amount=0.0):
+        # TODO put these two saves into a transaction
         # clear payment
         if self.amount != amount:
             return False
@@ -250,7 +298,8 @@ class Payment(models.Model):
         self.save()
 
         # update ad
-        self.ad.expires_on += datetime.timedelta(days=payment.pricing.length)
+        # TODO move these into a model method
+        self.ad.expires_on += datetime.timedelta(days=self.pricing.length)
         self.ad.created_on = datetime.datetime.now()
         self.ad.active = True
         self.ad.save()

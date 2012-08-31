@@ -1,24 +1,27 @@
-from django.shortcuts import render_to_response, redirect
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.template import RequestContext
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, TemplateView
 
 
 from classifieds.models import Ad
 from classifieds.utils import context_sortable
+from classifieds.views.base import LoginRequiredMixin
 
 
-@login_required
-def mine(request):
-    ads = Ad.objects.filter(user=request.user, active=True)
-    context = context_sortable(request, ads)
-    context['sortfields'] = ['id', 'category', 'created_on']
-    return render_to_response('classifieds/manage.html', context,
-                              context_instance=RequestContext(request))
+class MyAdsView(LoginRequiredMixin, TemplateView):
+    template_name = 'classifieds/manage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyAdsView, self).get_context_data(**kwargs)
+        context['sortfields'] = ['id', 'category', 'created_on']
+        context.update(context_sortable(self.request,
+                                        Ad.objects.filter(user=self.request.user, active=True)))
+        return context
 
 
 class AdDeleteView(DeleteView):
@@ -29,7 +32,7 @@ class AdDeleteView(DeleteView):
         return super(AdDeleteView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return redirect('classifieds_manage_view_all')
+        return reverse('classifieds_manage_view_all')
 
     def delete(self, request, *args, **kwargs):
         response = super(AdDeleteView, self).delete(request, *args, **kwargs)

@@ -1,15 +1,13 @@
 
-* Make the app a proper python package (setup.py, fix install instructions, add to pypi)
-
-* Implement the image upload field type (GH issue #2)
-
-* Skip payment step when a free pricing option is chosen
+* Make the app a proper python package (improve install instructions, add to pypi)
 
 * Try http://mvpdev.github.com/django-eav/
 
 * Try django-filters for search functionality
 
   - Fork the project to support EAV fields
+
+* Look into switching to geodjango stuff for zipcode thingy
 
 * Rework how app settings are done.
 
