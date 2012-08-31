@@ -60,5 +60,4 @@ class TestAdBrowsing(FancyTestCase):
                 params=post, slug='test')
         response = self.get('classifieds_browse_search_results',
                 slug='test')
-        print response
         self.assertTemplateUsed(response, 'classifieds/list.html')

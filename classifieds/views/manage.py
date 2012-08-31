@@ -1,10 +1,8 @@
 # vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
-from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.template import RequestContext
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.views.generic import DeleteView, TemplateView

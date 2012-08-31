@@ -2,7 +2,7 @@
 """
 URLconf for django-classifieds.
 """
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url
 
 from classifieds.views import AdEditView, AdCreationEditView
 from classifieds.views.manage import AdDeleteView, MyAdsView

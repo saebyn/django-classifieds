@@ -1,0 +1,74 @@
+[
+    {
+        "fields": {
+            "category": 1, 
+            "created_on": "2011-08-21T16:00:00-08:00", 
+            "user": 2, 
+            "title": "Testing ad", 
+            "active": false, 
+            "expires_on": "2015-10-14T21:18:43-08:00"
+        }, 
+        "model": "classifieds.ad", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "category": 1, 
+            "created_on": "2010-10-14T21:18:43-08:00", 
+            "user": 2, 
+            "title": "Testing ad", 
+            "active": true, 
+            "expires_on": "2010-10-24T21:18:43-08:00"
+        }, 
+        "model": "classifieds.ad", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "category": 1, 
+            "created_on": "2010-10-14T21:18:43-08:00", 
+            "user": 2, 
+            "title": "Testing ad", 
+            "active": true, 
+            "expires_on": "2015-10-14T21:18:43-08:00"
+        }, 
+        "model": "classifieds.ad", 
+        "pk": 18
+    }, 
+    {
+        "fields": {
+            "field": 1, 
+            "ad": 2, 
+            "value": "2011-08-20T08:17:00-08:00"
+        }, 
+        "model": "classifieds.fieldvalue", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "field": 2, 
+            "ad": 2, 
+            "value": "testing..."
+        }, 
+        "model": "classifieds.fieldvalue", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "field": 1, 
+            "ad": 18, 
+            "value": "2011-08-20T08:17:00-08:00"
+        }, 
+        "model": "classifieds.fieldvalue", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "field": 2, 
+            "ad": 18, 
+            "value": "testing..."
+        }, 
+        "model": "classifieds.fieldvalue", 
+        "pk": 2
+    }
+]

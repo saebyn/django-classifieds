@@ -1,0 +1,96 @@
+[
+    {
+        "fields": {
+            "images_max_height": 1024, 
+            "description": "Test", 
+            "images_max_count": 3, 
+            "contact_form_upload_file_extensions": "txt,doc,odf,pdf", 
+            "images_max_width": 1024, 
+            "enable_contact_form_upload": false, 
+            "template_prefix": "", 
+            "site": 1, 
+            "contact_form_upload_max_size": 1048576, 
+            "sort_order": 0, 
+            "images_allowed_formats": [
+                1
+            ], 
+            "sortby_fields": "", 
+            "images_max_size": 1048576, 
+            "slug": "test", 
+            "name": "Test"
+        }, 
+        "model": "classifieds.category", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "images_max_height": 1024, 
+            "description": "Second test category", 
+            "images_max_count": 0, 
+            "contact_form_upload_file_extensions": "txt,doc,odf,pdf", 
+            "images_max_width": 1024, 
+            "enable_contact_form_upload": true, 
+            "template_prefix": "", 
+            "site": 1, 
+            "contact_form_upload_max_size": 1048576, 
+            "sort_order": 1, 
+            "images_allowed_formats": [
+                1
+            ], 
+            "sortby_fields": "", 
+            "images_max_size": 1048576, 
+            "slug": "second-category", 
+            "name": "Second Category"
+        }, 
+        "model": "classifieds.category", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "category": 1, 
+            "field_type": 4, 
+            "name": "Test Field", 
+            "enable_wysiwyg": false, 
+            "required": true, 
+            "label": "Test field", 
+            "enable_counter": false, 
+            "max_length": null, 
+            "help_text": "Enter a date and time.", 
+            "options": ""
+        }, 
+        "model": "classifieds.field", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "category": 1, 
+            "field_type": 12, 
+            "name": "Test Text Field", 
+            "enable_wysiwyg": true, 
+            "required": false, 
+            "label": "Test text field", 
+            "enable_counter": true, 
+            "max_length": 1000, 
+            "help_text": "", 
+            "options": ""
+        }, 
+        "model": "classifieds.field", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "category": 2, 
+            "field_type": 13, 
+            "name": "Second test field", 
+            "enable_wysiwyg": false, 
+            "required": true, 
+            "label": "Test field", 
+            "enable_counter": false, 
+            "max_length": null, 
+            "help_text": "Choose one", 
+            "options": "A, B, C"
+        }, 
+        "model": "classifieds.field", 
+        "pk": 3
+    }
+]

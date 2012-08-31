@@ -23,7 +23,7 @@ class TestAdManage(FancyTestCase):
         self.assertIn(reverse('auth_login'), response['Location'])
 
     def test_manage_delete_requires_post_to_complete(self):
-        response = self.get('classifieds_manage_ad_delete', pk=18)
+        self.get('classifieds_manage_ad_delete', pk=18)
         from classifieds.models import Ad
         self.assertEqual(Ad.objects.filter(pk=18).count(), 1)
 
@@ -32,7 +32,7 @@ class TestAdManage(FancyTestCase):
         self.assertTemplateUsed(response, 'classifieds/ad_confirm_delete.html')
 
     def test_manage_delete_post_deletes_ad(self):
-        response = self.post('classifieds_manage_ad_delete', pk=18)
+        self.post('classifieds_manage_ad_delete', pk=18)
         from classifieds.models import Ad
         self.assertEqual(Ad.objects.filter(pk=18).count(), 0)
 
@@ -57,7 +57,7 @@ class TestAdManage(FancyTestCase):
                   'adimage_set-MAX_NUM_FORMS': u'3',
                   'title': 'Test Title',
                   'Test Field': '2011-08-22 08:00:00'}
-        response = self.client.post(reverse("classifieds_manage_ad_edit",
+        self.client.post(reverse("classifieds_manage_ad_edit",
                                     kwargs=dict(pk=18)), params)
         from classifieds.models import Ad
         self.assertEqual(Ad.objects.get(pk=18).title, 'Test Title')
@@ -68,8 +68,9 @@ class TestAdManage(FancyTestCase):
                   'adimage_set-MAX_NUM_FORMS': u'3',
                   'title': 'Test Title',
                   'Test Field': '2011-08-22 08:00:00'}
-        response = self.client.post(reverse("classifieds_manage_ad_edit",
+        self.client.post(reverse("classifieds_manage_ad_edit",
                                     kwargs=dict(pk=18)), params)
         from classifieds.models import Ad
+        # depends on local timezone being UTC-7
         self.assertEqual(Ad.objects.get(pk=18).field('Test Field'),
-                         '2011-08-22 08:00:00')
+                '2011-08-22 08:00:00-07:00')

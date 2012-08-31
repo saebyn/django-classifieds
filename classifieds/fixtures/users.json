@@ -1,0 +1,56 @@
+[
+    {
+        "fields": {
+            "username": "admin", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": true, 
+            "is_staff": true, 
+            "last_login": "2011-08-20T16:07:07-08:00", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$66f2e$de984cabd82fb42c46034d5380a7029bd3670e24", 
+            "email": "john@pledge4code.com", 
+            "date_joined": "2010-10-13T21:22:27-08:00"
+        }, 
+        "model": "auth.user", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "username": "user", 
+            "first_name": "Test", 
+            "last_name": "User", 
+            "is_active": true, 
+            "is_superuser": false, 
+            "is_staff": false, 
+            "last_login": "2011-08-20T16:23:14-08:00", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$8d62b$c1c5c708d8dc89d9305e9f2f3f0669d203997351", 
+            "email": "test@example.com", 
+            "date_joined": "2011-08-20T16:23:14-08:00"
+        }, 
+        "model": "auth.user", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "username": "other_user", 
+            "first_name": "Testing", 
+            "last_name": "User", 
+            "is_active": true, 
+            "is_superuser": false, 
+            "is_staff": false, 
+            "last_login": "2011-08-20T16:23:15-08:00", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$8d62b$c1c5c708d8dc89d9305e9f2f3f0669d203997351", 
+            "email": "test2@example.com", 
+            "date_joined": "2011-08-20T16:23:15-08:00"
+        }, 
+        "model": "auth.user", 
+        "pk": 3
+    }
+]

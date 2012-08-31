@@ -1,9 +1,8 @@
 # vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
-import datetime
-
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.http import Http404
+from django.utils import timezone
 
 from classifieds.models import Category, Ad, Field
 from classifieds.utils import context_sortable, render_category_page, \
@@ -19,10 +18,10 @@ def category_overview(request):
 
 def view(request, pk):
     # find the ad, if available
-    ad = get_object_or_404(Ad, pk=pk, active=True)
+    ad = get_object_or_404(Ad.objects.select_related('category', 'user'), pk=pk, active=True)
 
     # only show an expired ad if this user owns it
-    if ad.expires_on < datetime.datetime.now() and ad.user != request.user:
+    if ad.expires_on < timezone.now() and ad.user != request.user:
         raise Http404
 
     return render_category_page(request, ad.category, 'view.html', {'ad': ad})
@@ -39,7 +38,7 @@ def search_in_category(request, slug):
 
 
 # TODO consider switching this to get search parameters from GET instead of POST
-# This POST, save in session, GET setup was used because it was desired to keep
+# This POST -> save in session -> GET setup was used because it was desired to keep
 # the URL of the search page clear of GET parameters.
 def search_results(request, slug):
     if request.method == 'POST':
@@ -59,7 +58,7 @@ def search_results(request, slug):
 
     if post and is_valid:
         ads = category.ad_set.filter(active=True,
-                                     expires_on__gt=datetime.datetime.now())
+                                     expires_on__gt=timezone.now())
 
         for f in search_forms:
             ads = f.filter(ads)

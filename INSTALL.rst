@@ -20,6 +20,15 @@ These installation instructions are based on adding `django-classifieds` to an e
 
   to your `INSTALLED_APPS` setting.
 
-4. Set your LOGIN_URL = '/registration/login/' and LOGOUT_URL = '/registration/logout/'
+4. Set your `LOGIN_URL` = '/registration/login/' and `LOGOUT_URL` = '/registration/logout/'
 
-5. RECAPTCHA ?? (do we even use those settings?)
+5. Other settings you may wish to change:
+
+   * `LOGIN_REDIRECT_URL`
+
+   * `ACCOUNT_ACTIVATION_DAYS`
+
+   * `PAYPAL_RECEIVER_EMAIL`
+
+..
+        See ``extras/projects/settings.py`` for an example.
