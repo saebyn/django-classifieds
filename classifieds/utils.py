@@ -85,31 +85,10 @@ def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
     if 'sort' in request.GET and request.GET['sort'] != '':
         sort = request.GET['sort']
 
-    # TODO see if this can be removed or simplified
     if sort in ['created_on', 'expires_on', 'category', 'title']:
-        ads_sorted = ads.extra(select={'featured': """SELECT 1
-FROM `classifieds_payment_options`
-LEFT JOIN `classifieds_payment` ON `classifieds_payment_options`.`payment_id` = `classifieds_payment`.`id`
-LEFT JOIN `classifieds_pricing` ON `classifieds_pricing`.`id` = `classifieds_payment`.`pricing_id`
-LEFT JOIN `classifieds_pricingoptions` ON `classifieds_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
-WHERE `classifieds_pricingoptions`.`name` = %s
-AND `classifieds_payment`.`ad_id` = `classifieds_ad`.`id`
-AND `classifieds_payment`.`paid` = 1
-AND `classifieds_payment`.`paid_on` < NOW()
-AND DATE_ADD( `classifieds_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
-DAY ) > NOW()"""}, select_params=[PricingOptions.FEATURED_LISTING]).extra(order_by=['-featured', order + sort])
+        ads_sorted = ads.sort_featured_ads(order + sort)
     else:
-        ads_sorted = ads.extra(select=SortedDict([('fvorder', 'select value from classifieds_fieldvalue LEFT JOIN classifieds_field on classifieds_fieldvalue.field_id = classifieds_field.id where classifieds_field.name = %s and classifieds_fieldvalue.ad_id = classifieds_ad.id'), ('featured', """SELECT 1
-FROM `classifieds_payment_options`
-LEFT JOIN `classifieds_payment` ON `classifieds_payment_options`.`payment_id` = `classifieds_payment`.`id`
-LEFT JOIN `classifieds_pricing` ON `classifieds_pricing`.`id` = `classifieds_payment`.`pricing_id`
-LEFT JOIN `classifieds_pricingoptions` ON `classifieds_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
-WHERE `classifieds_pricingoptions`.`name` = %s
-AND `classifieds_payment`.`ad_id` = `classifieds_ad`.`id`
-AND `classifieds_payment`.`paid` =1
-AND `classifieds_payment`.`paid_on` < NOW()
-AND DATE_ADD( `classifieds_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
-DAY ) > NOW()""")]), select_params=[sort, PricingOptions.FEATURED_LISTING]).extra(order_by=['-featured', order + 'fvorder'])
+        ads_sorted = ads.sort_featured_ads().order_by_field(order + sort)
 
     pager = Paginator(ads_sorted, perpage)
 
@@ -118,25 +97,28 @@ DAY ) > NOW()""")]), select_params=[sort, PricingOptions.FEATURED_LISTING]).extr
     except InvalidPage:
         page = {'object_list': False}
 
-    can_sortby_list = []
-    sortby_list = ['created_on']
-    for category in Category.objects.filter(ad__in=ads.values('pk').query).distinct():
-        can_sortby_list += category.sortby_fields.split(',')
+    can_sortby_fields = set()
+    sortby_fields = set(['created_on'])
+    # Use the simpler `ads` query here since we don't need the ordering.
+    categories = Category.objects.filter(ad__in=ads.values('pk').query).distinct()
+    for category in categories:
+        can_sortby_fields.update(category.sortby_fields.split(','))
 
-    for category in Category.objects.filter(ad__in=ads.values('pk').query).distinct():
+    for category in categories:
         for fieldname, in category.field_set.values_list('name'):
-            if fieldname not in sortby_list and fieldname in can_sortby_list:
-                sortby_list.append(fieldname)
+            if fieldname in can_sortby_fields:
+                sortby_fields.add(fieldname)
 
     for fieldname, in Field.objects.filter(category=None).values_list('name'):
-        if fieldname not in sortby_list and fieldname in can_sortby_list:
-            sortby_list.append(fieldname)
+        if fieldname in can_sortby_fields:
+            sortby_fields.append(fieldname)
 
-    return {'page': page, 'sortfields': sortby_list, 'no_results': False,
+    return {'page': page, 'sortfields': sortby_fields, 'no_results': False,
             'perpage': perpage}
 
 
-def prepare_sforms(fields, fields_left, post=None):
+def prepare_search_forms(fields, fields_left, post=None):
+    # TODO refactor this
     sforms = []
     select_fields = {}
     for field in fields:
@@ -161,7 +143,9 @@ def prepare_sforms(fields, fields_left, post=None):
         if f is not None:
             sforms.append(f)
 
-    return sforms
+    is_valid = all([f.is_valid() or f.is_empty() for f in sforms])
+
+    return sforms, is_valid
 
 
 class TinyMCEWidget(forms.Textarea):
