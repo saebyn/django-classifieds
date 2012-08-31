@@ -1,0 +1,7 @@
+Django==1.4.1
+South
+django-paypal
+django-profiles
+django-registration
+sorl-thumbnail
+PIL==1.1.7
