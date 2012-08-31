@@ -4,9 +4,6 @@ Various utility functions for django-classifieds.
 """
 
 from PIL import Image
-import HTMLParser
-import string
-import re
 import os.path
 
 from django.utils.datastructures import SortedDict
@@ -17,14 +14,14 @@ from django.template import TemplateDoesNotExist, RequestContext
 
 from django import forms
 from django.http import HttpResponse
-from django.forms.fields import EMPTY_VALUES
 
-from htmlentitydefs import entitydefs
 from sorl.thumbnail import ImageField
 
 from classifieds.conf import settings
 from classifieds.search import SelectForm, searchForms
-from classifieds.models import Field, Category, PricingOptions
+from classifieds.models import Field, Category
+from classifieds.forms.fields import TinyMCEField
+from classifieds.forms.widgets import TinyMCEWidget
 
 
 def category_template_name(category, page):
@@ -32,6 +29,7 @@ def category_template_name(category, page):
                         category.template_prefix, page)
 
 
+# TODO consider moving this into a class based view base class?
 def render_category_page(request, category, page, context):
     template_name = category_template_name(category, page)
     try:
@@ -146,45 +144,6 @@ def prepare_search_forms(fields, fields_left, post=None):
     is_valid = all([f.is_valid() or f.is_empty() for f in sforms])
 
     return sforms, is_valid
-
-
-class TinyMCEWidget(forms.Textarea):
-    def __init__(self, *args, **kwargs):
-        attrs = kwargs.setdefault('attrs', {})
-        if 'class' not in attrs:
-            attrs['class'] = 'tinymce'
-        else:
-            attrs['class'] += ' tinymce'
-
-        super(TinyMCEWidget, self).__init__(*args, **kwargs)
-
-    class Media:
-        js = ('js/tiny_mce/tiny_mce.js', 'js/tinymce_forms.js',)
-
-
-class TinyMCEField(forms.CharField):
-    def clean(self, value):
-        """Validates max_length and min_length. Returns a Unicode object."""
-        if value in EMPTY_VALUES:
-            return u''
-
-        # This stripping was done to ensure that the character count reflected
-        # what the user sees when they type.
-        # I don't remember why 1 is subtracted from this XXX
-        value_length = len(re.sub(r'<.*?>', '', value)\
-            .replace('&nbsp;', ' ')\
-            .replace('&lt;', '<')\
-            .replace('&gt;', '>')\
-            .replace('&amp;', '&')\
-            .replace('\n', '')\
-            .replace('\r', '')) - 1
-
-        if self.max_length is not None and value_length > self.max_length:
-            raise forms.ValidationError(self.error_messages['max_length'] % {'max': self.max_length, 'length': value_length})
-        if self.min_length is not None and value_length < self.min_length:
-            raise forms.ValidationError(self.error_messages['min_length'] % {'min': self.min_length, 'length': value_length})
-
-        return value
 
 
 def field_list(instance):

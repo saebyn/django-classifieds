@@ -25,7 +25,7 @@ def select_category(request):
     view.
     """
     return render_to_response('classifieds/category_choice.html',
-                              {'categories': Category.objects.all(),
+            {'categories': Category.objects.all(),
                                'type': 'create'},
                               context_instance=RequestContext(request))
 

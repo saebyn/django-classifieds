@@ -5,6 +5,7 @@ Form widgets for django-classifieds.
 
 from django.forms import Textarea
 
+
 class TinyMCEWidget(Textarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs',{})

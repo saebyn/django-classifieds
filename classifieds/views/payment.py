@@ -1,5 +1,5 @@
 # vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.template import Context, loader, RequestContext
 from django.utils.translation import ugettext as _
@@ -19,6 +19,7 @@ from classifieds import views
 @login_required
 def checkout(request, pk):
     ad = get_object_or_404(Ad, pk=pk)
+
     form = CheckoutForm(request.POST or None)
     if form.is_valid():
         total = 0
@@ -36,19 +37,24 @@ def checkout(request, pk):
 
         payment.save()
 
-        # send email when done
-        # 1. render context to email template
+        # render context to email template
         email_template = loader.get_template('classifieds/email/posting.txt')
         context = Context({'ad': ad})
         email_contents = email_template.render(context)
 
-        # 2. send email
+        # send email
         send_mail(_('Your ad will be posted shortly.'),
                   email_contents,
                   app_settings.FROM_EMAIL,
                   [ad.user.email],
                   fail_silently=False)
 
+        # If no payment is required, send the user to the completion page
+        if total == 0:
+            payment.complete(0)
+            return redirect('classifieds_payment_view_bought', pk=ad.pk)
+
+        # If payment is required, send the user to Paypal
         item_name = _('Your ad on ') + Site.objects.get_current().name
         paypal_values = {'amount': total,
                          'item_name': item_name,

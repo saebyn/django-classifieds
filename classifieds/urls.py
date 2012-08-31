@@ -42,7 +42,8 @@ urlpatterns += patterns('classifieds.views',
     url(r'^delete/(?P<pk>[0-9]+)/$', AdDeleteView.as_view(),
         name='classifieds_manage_ad_delete'),
 
-    (r'^new/(?P<pk>[0-9]+)/$', 'payment.view_bought'),
+    url(r'^new/(?P<pk>[0-9]+)/$', 'payment.view_bought',
+        name='classifieds_payment_view_bought'),
     (r'^checkout/(?P<pk>[0-9]+)$', 'payment.checkout'),
     (r'^pricing$', 'payment.pricing'),
 

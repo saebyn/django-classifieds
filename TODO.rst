@@ -1,8 +1,6 @@
 
 * Make the app a proper python package (improve install instructions, add to pypi)
 
-* Skip payment step when a free pricing option is chosen
-
 * Try http://mvpdev.github.com/django-eav/
 
 * Try django-filters for search functionality
