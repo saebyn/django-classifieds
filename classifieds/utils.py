@@ -20,6 +20,7 @@ from django.http import HttpResponse
 from django.forms.fields import EMPTY_VALUES
 
 from htmlentitydefs import entitydefs
+from sorl.thumbnail import ImageField
 
 from classifieds.conf import settings
 from classifieds.search import SelectForm, searchForms
@@ -163,67 +164,6 @@ def prepare_sforms(fields, fields_left, post=None):
     return sforms
 
 
-class StrippingParser(HTMLParser.HTMLParser):
-    # These are the HTML tags that we will leave intact
-    valid_tags = ('b', 'i', 'br', 'p', 'strong', 'h1', 'h2', 'h3', 'em',
-                  'span', 'ul', 'ol', 'li')
-
-    def __init__(self):
-        HTMLParser.HTMLParser.__init__(self)
-        self.result = ""
-        self.endTagList = []
-        self.entitydefs = entitydefs
-
-    def handle_data(self, data):
-        if data:
-            self.result = self.result + data
-
-    def handle_charref(self, name):
-        self.result = "%s&#%s;" % (self.result, name)
-
-    def handle_entityref(self, name):
-        if name in self.entitydefs:
-            x = ';'
-        else:
-            # this breaks unstandard entities that end with ';'
-            x = ''
-            self.result = "%s&%s%s" % (self.result, name, x)
-
-    def handle_starttag(self, tag, attrs):
-        """ Delete all tags except for legal ones """
-        if tag in self.valid_tags:
-            self.result = self.result + '<' + tag
-            for k, v in attrs:
-                if string.lower(k[0:2]) != 'on' and \
-                   string.lower(v[0:10]) != 'javascript':
-                    self.result = '%s %s="%s"' % (self.result, k, v)
-
-            endTag = '</%s>' % tag
-            self.endTagList.insert(0, endTag)
-            self.result = self.result + '>'
-
-    def handle_endtag(self, tag):
-        if tag in self.valid_tags:
-            self.result = "%s</%s>" % (self.result, tag)
-            remTag = '</%s>' % tag
-            self.endTagList.remove(remTag)
-
-    def cleanup(self):
-        """ Append missing closing tags """
-        for j in range(len(self.endTagList)):
-            self.result = self.result + self.endTagList[j]
-
-
-def strip(s):
-    """ Strip illegal HTML tags from string s """
-    # TODO replace with bleach
-    parser = StrippingParser()
-    parser.feed(s)
-    parser.close()
-    parser.cleanup()
-    return parser.result
-
-
 class TinyMCEWidget(forms.Textarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})
@@ -244,16 +184,17 @@ class TinyMCEField(forms.CharField):
         if value in EMPTY_VALUES:
             return u''
 
-        stripped_value = re.sub(r'<.*?>', '', value)
-        stripped_value = string.replace(stripped_value, '&nbsp;', ' ')
-        stripped_value = string.replace(stripped_value, '&lt;', '<')
-        stripped_value = string.replace(stripped_value, '&gt;', '>')
-        stripped_value = string.replace(stripped_value, '&amp;', '&')
-        stripped_value = string.replace(stripped_value, '\n', '')
-        stripped_value = string.replace(stripped_value, '\r', '')
+        # This stripping was done to ensure that the character count reflected
+        # what the user sees when they type.
+        # I don't remember why 1 is subtracted from this XXX
+        value_length = len(re.sub(r'<.*?>', '', value)\
+            .replace('&nbsp;', ' ')\
+            .replace('&lt;', '<')\
+            .replace('&gt;', '>')\
+            .replace('&amp;', '&')\
+            .replace('\n', '')\
+            .replace('\r', '')) - 1
 
-        value_length = len(stripped_value)
-        value_length -= 1
         if self.max_length is not None and value_length > self.max_length:
             raise forms.ValidationError(self.error_messages['max_length'] % {'max': self.max_length, 'length': value_length})
         if self.min_length is not None and value_length < self.min_length:
@@ -281,49 +222,67 @@ def field_list(instance):
     return fields
 
 
+def get_field(field):
+    """
+    >>> our_field = object()
+    >>> our_field.field_type = Field.CHAR_FIELD
+    >>> field, widget = get_field(our_field)
+    >>> field.__class__.__name__
+    'CharField'
+    >>> widget.__class__.__name__
+    'TextInput'
+    """
+    mapping = {
+        Field.BOOLEAN_FIELD: (forms.BooleanField, None),
+        Field.CHAR_FIELD: (forms.CharField, forms.TextInput),
+        Field.DATE_FIELD: (forms.DateField, None),
+        Field.DATETIME_FIELD: (forms.DateTimeField, None),
+        Field.EMAIL_FIELD: (forms.EmailField, None),
+        Field.FLOAT_FIELD: (forms.FloatField, None),
+        Field.INTEGER_FIELD: (forms.IntegerField, None),
+        Field.TIME_FIELD: (forms.TimeField, None),
+        Field.URL_FIELD: (forms.URLField, None),
+        Field.IMAGE_FIELD: (ImageField, None),
+        Field.SELECT_FIELD: (forms.ChoiceField, None),
+    }
+
+    if field.field_type == Field.TEXT_FIELD:
+        if field.enable_wysiwyg:
+            return TinyMCEField, TinyMCEWidget
+        else:
+            return forms.CharField, forms.TextInput
+
+    try:
+        return mapping[field.field_type]
+    except KeyError:
+        raise NotImplementedError(u'Unknown field type "%s"' % field.get_field_type_display())
+
+
 def fields_for_ad(instance):
     # generate a sorted dict of fields corresponding to the Field model
     # for the Ad instance
     fields_dict = SortedDict()
     fields = field_list(instance)
-    # TODO this really, really should be refactored
     for field in fields:
+        field_type, widget = get_field(field)
+        field_options = {
+            'label': field.label,
+            'help_text': field.help_text,
+            'required': field.required
+        }
+        if widget is not None:
+            field_options['widget'] = widget
+
         if field.field_type == Field.BOOLEAN_FIELD:
-            fields_dict[field.name] = forms.BooleanField(label=field.label, required=False, help_text=field.help_text)
-        elif field.field_type == Field.CHAR_FIELD:
-            widget = forms.TextInput
-            fields_dict[field.name] = forms.CharField(label=field.label, required=field.required, max_length=field.max_length, help_text=field.help_text, widget=widget)
-        elif field.field_type == Field.DATE_FIELD:
-            fields_dict[field.name] = forms.DateField(label=field.label, required=field.required, help_text=field.help_text)
-        elif field.field_type == Field.DATETIME_FIELD:
-            fields_dict[field.name] = forms.DateTimeField(label=field.label, required=field.required, help_text=field.help_text)
-        elif field.field_type == Field.EMAIL_FIELD:
-            fields_dict[field.name] = forms.EmailField(label=field.label, required=field.required, help_text=field.help_text)
-        elif field.field_type == Field.FLOAT_FIELD:
-            fields_dict[field.name] = forms.FloatField(label=field.label, required=field.required, help_text=field.help_text)
-        elif field.field_type == Field.INTEGER_FIELD:
-            fields_dict[field.name] = forms.IntegerField(label=field.label, required=field.required, help_text=field.help_text)
-        elif field.field_type == Field.TIME_FIELD:
-            fields_dict[field.name] = forms.TimeField(label=field.label, required=field.required, help_text=field.help_text)
-        elif field.field_type == Field.URL_FIELD:
-            fields_dict[field.name] = forms.URLField(label=field.label, required=field.required, help_text=field.help_text)
+            field_options['required'] = False
+        elif field.field_type in [Field.CHAR_FIELD, Field.TEXT_FIELD]:
+            field_options['max_length'] = field.max_length
+        elif field.field_type == Field.IMAGE_FIELD:
+            field_options['upload_to'] = 'uploads/'
         elif field.field_type == Field.SELECT_FIELD:
             options = field.options.split(',')
-            fields_dict[field.name] = forms.ChoiceField(label=field.label, required=field.required, help_text=field.help_text, choices=zip(options, options))
-        elif field.field_type == Field.TEXT_FIELD:
-            if field.enable_wysiwyg:
-                widget = TinyMCEWidget
-                field_type = TinyMCEField
-            else:
-                widget = forms.Textarea
-                field_type = forms.CharField
+            field_options['choices'] = zip(options, options)
 
-            fields_dict[field.name] = field_type(label=field.label,
-                                                 required=field.required,
-                                                 help_text=field.help_text,
-                                                 max_length=field.max_length,
-                                                 widget=widget)
-        else:
-            raise NotImplementedError(u'Unknown field type "%s"' % field.get_field_type_display())
+        fields_dict[field.name] = field_type(**field_options)
 
     return fields_dict

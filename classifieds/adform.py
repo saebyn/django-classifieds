@@ -22,10 +22,12 @@ from django.utils.translation import ugettext as _
 from django.forms import BaseForm
 
 import re
+import bleach
 
 from classifieds.conf import settings
 from classifieds.models import FieldValue
-from classifieds.utils import fields_for_ad, field_list, strip
+from classifieds.utils import fields_for_ad, field_list
+
 
 __all__ = ('AdForm',)
 
@@ -63,10 +65,7 @@ class AdForm(BaseForm):
         fields = field_list(self.instance)
 
         for field in fields:
-            if field.enable_wysiwyg:
-                value = unicode(strip(cleaned_data[field.name]))
-            else:
-                value = unicode(cleaned_data[field.name])
+            value = bleach.clean(cleaned_data[field.name])
 
             # strip words in settings.FORBIDDEN_WORDS
             for word in settings.FORBIDDEN_WORDS:
