@@ -63,6 +63,7 @@ def clean_adimageformset(self):
                                                             flat=True)))
 
 
+# TODO could this be converted into a class-based view mixin?
 def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
     order = '-'
     sort = 'expires_on'

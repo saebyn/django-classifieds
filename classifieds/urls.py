@@ -5,7 +5,7 @@ URLconf for django-classifieds.
 from django.conf.urls.defaults import *
 
 from classifieds.views import AdEditView, AdCreationEditView
-from classifieds.views.manage import AdDeleteView
+from classifieds.views.manage import AdDeleteView, MyAdsView
 
 
 # nested urls
@@ -36,7 +36,8 @@ urlpatterns = base_urlpatterns
 
 # top-level urls
 urlpatterns += patterns('classifieds.views',
-    url(r'^mine/$', 'manage.mine', name='classifieds_manage_view_all'),
+    url(r'^mine/$', MyAdsView.as_view(),
+        name='classifieds_manage_view_all'),
     url(r'^edit/(?P<pk>[0-9]+)/$', AdEditView.as_view(),
         name='classifieds_manage_ad_edit'),
     url(r'^delete/(?P<pk>[0-9]+)/$', AdDeleteView.as_view(),

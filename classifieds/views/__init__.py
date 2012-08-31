@@ -1,6 +1,4 @@
 # vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import BaseUpdateView
 from django.forms.models import inlineformset_factory
@@ -9,8 +7,10 @@ from classifieds.models import Ad, AdImage
 from classifieds.adform import AdForm
 from classifieds.utils import clean_adimageformset, render_category_page
 
+from classifieds.views.base import LoginRequiredMixin
 
-class AdEditView(BaseUpdateView):
+
+class AdEditView(LoginRequiredMixin, BaseUpdateView):
     model = Ad
     form_class = AdForm
     context_object_name = 'ad'
@@ -64,10 +64,6 @@ class AdEditView(BaseUpdateView):
         self.object = self.get_object()
         self.imagesformset = self.build_imageupload_formset()
         return super(AdEditView, self).post(request, *args, **kwargs)
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(AdEditView, self).dispatch(request, *args, **kwargs)
 
 
 class AdCreationEditView(AdEditView):

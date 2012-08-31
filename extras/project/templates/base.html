@@ -36,10 +36,10 @@
     <ul class="commands">
      <li><a href="/">{% trans 'Home' %}</a></li>
      <li>
-      <a href="{% url classifieds.views.create.select_category %}">{% trans 'Post' %}</a>
+      <a href="{% url classifieds_create_ad_select_category %}">{% trans 'Post' %}</a>
      </li>
      <li>
-      <a href="{% url classifieds.views.manage.mine %}">{% trans 'Manage' %}</a>
+      <a href="{% url classifieds_manage_view_all %}">{% trans 'Manage' %}</a>
      </li>
      <li>
       <a href="{% url profiles_edit_profile %}">{% trans 'Settings' %}</a>
