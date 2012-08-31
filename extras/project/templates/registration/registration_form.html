@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Register</h1>
+<p>
+{% trans 'We will use the email address you provide to communicate with you. Please add {{ site.domain }} to your safe list to ensure it is not blocked by your email filtering program.' %}
+</p>
+<form method="post" action="#">
+ <table style="width: 445px;">
+  {{ form }}
+
+  <tr style="text-align: right;">
+   <td colspan="2">
+  &nbsp;{% trans 'I have read and accept the' %}<br /><a href="/termsofuse/" style="padding: 0px;" target="_blank" onclick="window.open('/termsofuse/basic/', '{% trans 'Terms of Use' %}', 'width=800,height=600,scrollbars=1'); return false;">{% trans 'Terms of Use' %}</a> {% trans 'and' %} <a href="/privacypolicy/" style="padding: 0px;" target="_blank" onclick="window.open('/privacypolicy/basic/', '{% trans 'Privacy Policy' %}', 'width=800,height=600,scrollbars=1'); return false;">{% trans 'Privacy Policy'%}</a>
+   </td>
+  </tr>
+
+  <tr style="text-align: right;">
+   <td colspan="2"><input type="submit" class="submit" value="{% trans 'Register' %}" /></td>
+  </tr>
+ </table>
+ <p>
+  
+  
+ </p>
+</form>
+{% endblock %}

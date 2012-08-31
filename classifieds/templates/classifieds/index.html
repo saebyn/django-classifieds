@@ -1,55 +1,53 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
+{% load i18n %}
 
 {% block content %}
-<h1>Add Listing</h1>
+<h1>{% trans 'Add Listing' %}</h1>
 
-<p>Posting an ad is fast and simple.</p>
+<p>{% trans 'Posting an ad is fast and simple.' %}</p>
 
-<h2>Ad Features and Benefits</h2>
+<h2>{% trans 'Ad Features and Benefits' %}</h2>
 
 <ul class="arrow">
- <li>Generate quick leads</li>
- <li>Real time editing and/or updating of your ad 24/7</li>
- <li>Direct contact from interested viewers via phone and/or email</li>
- <li>Add a link to your website</li>
- <li>Display up to 4 photos on your ad</li>
+ <li>{% trans 'Generate quick leads' %}</li>
+ <li>{% trans 'Real time editing and/or updating of your ad 24/7' %}</li>
+ <li>{% trans 'Direct contact from interested viewers via phone and/or email' %}</li>
+ <li>{% trans 'Add a link to your website' %}</li>
+ <li>{% trans 'Display up to 4 photos on your ad' %}</li>
 </ul>
 
-<h2>Ad Rates</h2>
+<h2>{% trans 'Ad Rates' %}</h2>
 
 <div class="adrates">
  <ul>
 {% for price in prices %}
-  <li><span class="price">${{ price.price }}</span>{{ price.length }} days: </li>
+  <li><span class="price">${{ price.price }}</span>{{ price.length }} {% trans 'days' %}: </li>
 {% endfor %}
  </ul>
 </div>
 
-<p>The longer your ad runs... the greater the savings! <br />With benefits like these, there's no reason to delay... <br /><span style="font-weight: bold;">Why not post your ad today!</span></p>
-
 <div class="loginbox">
  <div class="register">
-  <h2>New Users</h2>
-  <p>Please register.<br />It's quick, it's simple, it's free.</p>
-   <a class="button" href="{% url registration_register %}">Register</a>
+  <h2>{% trans 'New Users' %}</h2>
+  <p>{% trans 'Please register.' %}</p>
+  <p>{% trans "It's quick, it's simple, it's free." %}</p>
+   <a class="button" href="{% url registration_register %}">{% trans 'Register' %}</a>
  </div>
  <div class="login">
-  <h2>Returning Users</h2>
+  <h2>{% trans 'Returning Users' %}</h2>
   <form method="post" action="{% url django.contrib.auth.views.login %}">
+   {% csrf_token %}
    <table>
-    <tr><th><label for="id_username">Username : </label></th><td><input id="id_username" type="text" name="username" maxlength="30" /></td></tr>
-    <tr><th><label for="id_password">Password : </label></th><td><input id="id_password" type="password" name="password" maxlength="30" /> <a href="{% url auth_password_reset %}">Forgot?</a></td></tr>
-    <tr><td colspan="2" style="text-align: center;"><input type="submit" value="Login" class="submit" /></td></tr>
+    <tr><th><label for="id_username">{% trans 'Username' %} : </label></th><td><input id="id_username" type="text" name="username" maxlength="30" /></td></tr>
+    <tr><th><label for="id_password">{% trans 'Password' %} : </label></th><td><input id="id_password" type="password" name="password" maxlength="30" /> <a href="{% url auth_password_reset %}">{% trans 'Forgot?' %}</a></td></tr>
+    <tr><td colspan="2"><input type="submit" value="{% trans 'Login' %}" class="submit" /></td></tr>
    </table>
    <p>
-    <input type="hidden" name="next" value="{% url classifieds.views.create.select_category %}" />
+    <input type="hidden" name="next" value="{% url classifieds_create_ad_select_category %}" />
    </p>
   </form>
   <p>
-   Note: By logging in, you agree to the<br /><a href="/termsofuse/" style="padding: 0px;" target="_blank" onclick="window.open('/termsofuse/basic/', 'Terms_of_Use', 'width=800,height=600,scrollbars=1'); return false;">Terms of Use</a> and <a href="/privacypolicy/" style="padding: 0px;" target="_blank" onclick="window.open('/privacypolicy/basic/', 'Privacy_Policy', 'width=800,height=600,scrollbars=1'); return false;">Privacy Policy</a>.
+   {% trans 'Note: By logging in, you agree to the' %} <a href="/termsofuse/" class="popup-info" target="_blank">{% trans 'Terms of Use' %}</a> {% trans 'and' %} <a href="/privacypolicy/" class="popup-info" target="_blank">{% trans 'Privacy Policy' %}</a>.
   </p>
  </div>
 </div>

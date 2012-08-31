@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
-
-{% load humanize %}
+{% load humanize i18n classifieds thumbnail %}
 
 {% block head %}
  <script type="text/javascript" src="{{ MEDIA_URL }}js/thumbnails.js"></script>
@@ -12,14 +8,7 @@
 {% block content %}
  {% block ad_create_status %}
   {% if create %}
-   <h1>Post Ad</h1>
-   <ol class="progress">
-    <li>1 | Select</li>
-    <li>2 | Post</li>
-    <li class="selected">3 | Review</li>
-    <li>4 | Checkout</li>
-   </ol>
-   <p><strong>Step 3 :</strong> Please review your post below</p>
+  {% post_ad_progress 3 %}
   {% endif %}
  {% endblock %}
 
@@ -32,9 +21,18 @@
  {% block ad %}
 
 <div class="ad-view">
- <div class="options">
-  <a href="{% url classifieds.views.browse.search_results ad.category.pk %}">&lt; Back to Results</a>&nbsp;|&nbsp;<a href="{% url contact.views.contact_ad ad.pk %}">Contact Info</a>
- </div>
+ <ul class="options">
+  <li>
+   <a href="{% url classifieds.views.browse.search_results ad.category.pk %}">&lt; Back to Results</a>
+   </li>
+  <li>
+   <a href="{% url classifieds.view.contact.contact_seller ad.pk %}">Contact Info</a>
+  </li>
+  <li>
+   <a href="{% url classifieds_manage_ad_edit ad.pk %}">Edit Ad</a>
+  </li>
+ </ul>
+</div>
 
  <div class="title">{{ ad.title }}</div>
 
@@ -64,9 +62,11 @@
 
  <div class="images">
  {% for image in ad.adimage_set.all %}
-  {% if image.get_thumb_photo_url %}
-   <a href="{{ image.get_full_photo_url }}"><img src="{{ image.get_thumb_photo_url }}" alt="Thumbnail" class="thumbnail" /></a>
-  {% endif %}
+  {% thumbnail image.full_photo "1000" as big %}
+   {% thumbnail image.full_photo "50x50" crop="center" as small %}
+    <a href="{{ big.url }}" title="View full-size image"><img src="{{ small.url }}" alt="Photo Thumbnail"></a>
+   {% endthumbnail %}
+  {% endthumbnail %}
  {% endfor %}
  </div>
 </div>
@@ -74,11 +74,11 @@
  {% block preview_next %}
   {% if create %}
    <div style="height: 100px;">
-    <a class="button" style="margin-left: 73px; margin-right: 10px; float: left;" href="{% url classifieds.views.create.edit ad.pk %}">Edit Ad</a>
-    <a class="button" style="float: left;" href="{% url classifieds.views.create.checkout ad.pk %}">Continue</a>
+    <a class="button" style="margin-left: 73px; margin-right: 10px; float: left;" href="{% url classifieds_create_ad_edit ad.pk %}">Edit Ad</a>
+    <a class="button" style="float: left;" href="{% url classifieds.views.payment.checkout ad.pk %}">Continue</a>
    </div>
   {% endif %}
  {% endblock %}
 {% endblock %}
 
-{% block tellafriend %}http://{{ site.domain }}/ads/{{ ad.pk }}{% endblock %}
+{% block tellafriend %}http://{{ site.domain }}{% url classifieds_browse_ad_view ad.pk %}{% endblock %}

@@ -1,0 +1,45 @@
+-   fields:
+        date_joined: 2010-10-13 13:22:27
+        email: john@pledge4code.com
+        first_name: ''
+        groups: []
+        is_active: true
+        is_staff: true
+        is_superuser: true
+        last_login: 2011-08-20 08:07:07
+        last_name: ''
+        password: sha1$66f2e$de984cabd82fb42c46034d5380a7029bd3670e24
+        user_permissions: []
+        username: admin
+    model: auth.user
+    pk: 1
+-   fields:
+        date_joined: 2011-08-20 08:23:14
+        email: test@example.com
+        first_name: Test
+        groups: []
+        is_active: true
+        is_staff: false
+        is_superuser: false
+        last_login: 2011-08-20 08:23:14
+        last_name: User
+        password: sha1$8d62b$c1c5c708d8dc89d9305e9f2f3f0669d203997351
+        user_permissions: []
+        username: user
+    model: auth.user
+    pk: 2
+-   fields:
+        date_joined: 2011-08-20 08:23:15
+        email: test2@example.com
+        first_name: Testing
+        groups: []
+        is_active: true
+        is_staff: false
+        is_superuser: false
+        last_login: 2011-08-20 08:23:15
+        last_name: User
+        password: sha1$8d62b$c1c5c708d8dc89d9305e9f2f3f0669d203997351
+        user_permissions: []
+        username: other_user
+    model: auth.user
+    pk: 3

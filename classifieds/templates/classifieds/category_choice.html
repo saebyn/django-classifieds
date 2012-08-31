@@ -1,32 +1,18 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
+{% load i18n classifieds %}
 
 {% block content %}
  {% block ad_create_status %}
  {% ifequal type "create" %}
-   <h1>Post Ad</h1>
-   <ol class="progress">
-    <li class="selected">1 | Select</li>
-    <li>2 | Post</li>
-    <li>3 | Review</li>
-    <li>4 | Checkout</li>
-   </ol>
-   <p><strong>Step 1 :</strong> Please Select an Ad Category</p>
- {% endifequal %}
- {% ifequal type "search" %}
-   <h1>Select Category to Search</h1>
+  {% post_ad_progress 1 %}
  {% endifequal %}
  {% endblock %}
 
 <ul class="category-list">
 {% for category in categories %}
- {% ifequal type "search" %}
- <li><span>{{ category.description }}</span><a class="button" href="{% url classifieds.views.browse.search_in_category category.pk %}">{{ category.name }}</a></li>
- {% endifequal %}
  {% ifequal type "create" %}
- <li><span>{{ category.description }}</span><a class="button" href="{% url classifieds.views.create.create_in_category category.slug %}">{{ category.name }}</a></li>
+ <li><span>{{ category.description }}</span><a class="button" href="{% url classifieds_create_ad_in_category category.slug %}">{{ category.name }}</a></li>
  {% endifequal %}
-{% endfor %}
+ {% endfor %}
+</ul>
 {% endblock %}

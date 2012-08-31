@@ -1,0 +1,25 @@
+{% load i18n %}
+
+<h1>Post Ad</h1>
+ <ol class="progress">
+  <li{% ifequal step 1 %} class="selected"{% endifequal %}>1 | {% trans 'Select' %}</li>
+  <li {% ifequal step 2 %} class="selected"{% endifequal %}>2 | {% trans 'Post' %}</li>
+  <li{% ifequal step 3 %} class="selected"{% endifequal %}>3 | {% trans 'Review' %}</li>
+  <li{% ifequal step 4 %} class="selected"{% endifequal %}>4 | {% trans 'Checkout' %}</li>
+ </ol>
+ <p class="step">
+  <strong>{% trans 'Step' %} {{ step}} :</strong>
+  {% ifequal step 1 %}
+   {% trans 'Please Select an Ad Category' %}
+  {% endifequal %}
+  {% ifequal step 2 %}
+   {% trans 'Please Enter Ad/Contact Information' %}
+  {% endifequal %}
+  {% ifequal step 3 %}
+   {% trans 'Please review your post below' %}
+  {% endifequal %}
+  {% ifequal step 4 %}
+   {% trans 'Checkout' %}
+  {% endifequal %}
+ </p> 
+

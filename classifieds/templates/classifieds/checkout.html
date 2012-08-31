@@ -1,39 +1,35 @@
 {% extends "base.html" %}
-{% comment %}
-  $Id$
-{% endcomment %}
+{% load i18n classifieds %}
 
-{% block head %}
- <script type="text/javascript" src="{% url classifieds.views.create.pricing %}"></script>
+{% block extrajs %}
+<script type="text/javascript" defer="true" src="{% url classifieds.views.payment.pricing %}"></script>
 {% endblock %}
 
 {% block content %}
  {% block ad_create_status %}
-   <h1>Post Ad</h1>
-   <ol class="progress">
-    <li>1 | Select</li>
-    <li>2 | Post</li>
-    <li>3 | Review</li>
-    <li class="selected">4 | Checkout</li>
-   </ol>
-   <p><strong>Step 4 :</strong> Checkout</p>
+  {% post_ad_progress 4 %}
  {% endblock %}
  
-<p>Checkout page for posting titled "{{ ad.title }}" (Ad Id: {{ ad.pk }}) in the {{ ad.category.name }} category.</p>
-
-<form method="post" action="{% url classifieds.views.create.checkout ad.pk %}">
- <table>
-  {{ form }}
-  <tr>
-   <th><label>Total:</label></th>
-   <td><div id="total">Choose options above</div></td>
-  </tr>
- </table>
- <p style="text-align: center;">
-  <input type="image" src="{{ MEDIA_URL }}images/btn_paynowCC_LG.gif" style="border:none;" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+ <p>
+ {% blocktrans with title=ad.title id=ad.pk category_name=ad.category.name %}
+ Checkout page for posting titled "{{ title }}" (Ad Id: {{ id }}) in the {{ category_name }} category.
+ {% endblocktrans %}
  </p>
-</form>
-<br /><br /><br /><br />
-<a class="abort-checkout" onclick="return confirm('Are you sure?');" href="{% url classifieds.views.manage.mine %}">Exit / Delete</a>
+
+ <form method="post" action="{% url classifieds.views.payment.checkout ad.pk %}">
+  {% csrf_token %}
+  <table>
+   {{ form }}
+   <tr>
+    <th><label>Total:</label></th>
+    <td><div id="total">Choose options above</div></td>
+   </tr>
+  </table>
+  <p style="text-align: center;">
+   <input type="image" src="{{ MEDIA_URL }}images/btn_paynowCC_LG.gif" style="border:none;" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+  </p>
+ </form>
+
+ <a class="abort-checkout" onclick="return confirm('{% trans 'Are you sure?' %}');" href="{% url classifieds_manage_view_all %}">{% trans 'Exit / Delete' %}</a>
 
 {% endblock %}

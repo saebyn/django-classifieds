@@ -243,3 +243,16 @@ ul.category-list a.button {
   margin-top: 0px;
   width: 200px;
 }
+
+#content .head {
+  text-align: right;
+  height: 4em;
+}
+
+#content .head h2 {
+  float: left;
+}
+
+#sidebarView {
+  float: right;
+}
