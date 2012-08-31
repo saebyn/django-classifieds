@@ -6,5 +6,5 @@ dependencies:
 test:
   override:
     - python extras/project/manage.py test classifieds --settings=settings_circleci:
-      environment:
-        PYTHONPATH: extras/project/
+        environment:
+          PYTHONPATH: extras/project/
