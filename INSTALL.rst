@@ -2,6 +2,8 @@
 Installation
 ============
 
+These installation instructions are based on adding `django-classifieds` to an existing ``Django`` project.
+
 1. Put the 'classifieds' directory somewhere on your python path.
 
 2. Install and configure the packages in requirements.txt.
@@ -13,10 +15,11 @@ Installation
   'registration',
   'profiles',
   'django.contrib.humanize',
-  'sorl.thumbnail'
+  'sorl.thumbnail',
+  'south'
 
-  and optionally 'south'
-
-  to your `INSTALLED_APPS`.
+  to your `INSTALLED_APPS` setting.
 
 4. Set your LOGIN_URL = '/registration/login/' and LOGOUT_URL = '/registration/logout/'
+
+5. RECAPTCHA ?? (do we even use those settings?)

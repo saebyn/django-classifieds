@@ -1,3 +1,7 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
+"""
+Form field classes for django-classifieds.
+"""
 
 from django.forms import CharField, ValidationError
 from django.forms.fields import EMPTY_VALUES

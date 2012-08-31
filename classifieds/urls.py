@@ -1,4 +1,6 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 """
+URLconf for django-classifieds.
 """
 from django.conf.urls.defaults import *
 

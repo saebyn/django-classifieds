@@ -1,9 +1,9 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 import datetime
 
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from django.utils.translation import ugettext as _
 
 from classifieds.models import Ad, Category, Pricing
 from classifieds.utils import render_category_page

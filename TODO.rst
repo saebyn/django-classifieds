@@ -11,6 +11,10 @@
 
   - Fork the project to support EAV fields
 
+* Look into switching to geodjango stuff for zipcode thingy
+
+* replace our hackedtogether html striping with bleach in utils.py
+
 * Rework how app settings are done.
 
 * Contact form

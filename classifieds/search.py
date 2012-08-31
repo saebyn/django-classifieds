@@ -1,11 +1,13 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 """
+Search related forms and classes for django-classifieds.
 """
 
 from django import forms
 from django.contrib.localflavor.us import forms as us_forms
 from django.utils.translation import ugettext as _
 
-from classifieds.models import *
+from classifieds.models import FieldValue, ZipCode, Ad
 
 
 class PriceRangeForm(forms.Form):
@@ -68,10 +70,10 @@ class ZipCodeForm(forms.Form):
             zip_code = self.cleaned_data['zip_code']
             radius = self.cleaned_data['zip_range']
             zipcodeObj = ZipCode.objects.get(zipcode=zip_code)
-            zipcodes = [zipcode.zipcode for zipcode in zipcodeOb.nearby(radius)]
+            zipcodes = [zipcode.zipcode for zipcode in zipcodeObj.nearby(radius)]
 
-            fvs = FieldValue.objects.filter(field__name="zip_code")
-            fvs = fvs.filter(value__in=list(zipcodes))
+            fvs = FieldValue.objects.filter(field__name="zip_code",
+                    value__in=list(zipcodes))
 
             validAds = [fv.ad.pk for fv in fvs]
 
@@ -209,5 +211,6 @@ class SelectForm(forms.Form):
         x.fields.update(fields)
 
         return x
+
 
 searchForms = (PriceRangeForm, ZipCodeForm, MultiForm)

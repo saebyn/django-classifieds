@@ -1,4 +1,6 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 """
+Database models for django-classifieds.
 """
 
 from django.db import models
@@ -241,6 +243,7 @@ class Payment(models.Model):
     options = models.ManyToManyField(PricingOptions)
 
     def complete(self, amount=0.0):
+        # TODO put these two saves into a transaction
         # clear payment
         if self.amount != amount:
             return False
@@ -250,7 +253,8 @@ class Payment(models.Model):
         self.save()
 
         # update ad
-        self.ad.expires_on += datetime.timedelta(days=payment.pricing.length)
+        # TODO move these into a model method
+        self.ad.expires_on += datetime.timedelta(days=self.pricing.length)
         self.ad.created_on = datetime.datetime.now()
         self.ad.active = True
         self.ad.save()

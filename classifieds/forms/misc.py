@@ -1,8 +1,12 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 """
+Various extra form classes for django-classifieds.
 """
 
 from django import forms
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+
 from classifieds.models import Pricing, PricingOptions
 
 

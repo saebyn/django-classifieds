@@ -1,3 +1,4 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 """
 Django ModelForms compatible class to provide database driven form structure.
 
@@ -19,12 +20,11 @@ from django.utils.datastructures import SortedDict
 from django.forms.util import ErrorList
 from django.utils.translation import ugettext as _
 from django.forms import BaseForm
-from django import forms
 
 import re
 
 from classifieds.conf import settings
-from classifieds.models import Field, FieldValue
+from classifieds.models import FieldValue
 from classifieds.utils import fields_for_ad, field_list, strip
 
 __all__ = ('AdForm',)

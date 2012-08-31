@@ -1,4 +1,6 @@
+# vim: set fileencoding=utf-8 ft=python ff=unix nowrap tabstop=4 shiftwidth=4 softtabstop=4 smarttab shiftround expandtab :
 """
+Various utility functions for django-classifieds.
 """
 
 from PIL import Image
@@ -12,15 +14,16 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage
 from django.template.loader import get_template
 from django.template import TemplateDoesNotExist, RequestContext
-from django.forms import ValidationError
 
 from django import forms
 from django.http import HttpResponse
 from django.forms.fields import EMPTY_VALUES
 
+from htmlentitydefs import entitydefs
+
 from classifieds.conf import settings
 from classifieds.search import SelectForm, searchForms
-from classifieds.models import Ad, Field, Category, Pricing, PricingOptions
+from classifieds.models import Field, Category, PricingOptions
 
 
 def category_template_name(category, page):
@@ -53,8 +56,8 @@ def clean_adimageformset(self):
                     str(max_size / 1024))
 
         im = Image.open(form.cleaned_data['full_photo'].file)
-        allowed = self.instance.catoegy.images_allowed_formats
-        if allowed_formats.filter(format=im.format).count() == 0:
+        allowed_formats = self.instance.category.images_allowed_formats
+        if not allowed_formats.filter(format=im.format).exists():
             raise forms.ValidationError(
                     _(u'Your image must be in one of the following formats: ')\
                     + ', '.join(allowed_formats.values_list('format',
@@ -81,6 +84,7 @@ def context_sortable(request, ads, perpage=settings.ADS_PER_PAGE):
     if 'sort' in request.GET and request.GET['sort'] != '':
         sort = request.GET['sort']
 
+    # TODO see if this can be removed or simplified
     if sort in ['created_on', 'expires_on', 'category', 'title']:
         ads_sorted = ads.extra(select={'featured': """SELECT 1
 FROM `classifieds_payment_options`
@@ -89,7 +93,7 @@ LEFT JOIN `classifieds_pricing` ON `classifieds_pricing`.`id` = `classifieds_pay
 LEFT JOIN `classifieds_pricingoptions` ON `classifieds_payment_options`.`pricingoptions_id` = `classifieds_pricingoptions`.`id`
 WHERE `classifieds_pricingoptions`.`name` = %s
 AND `classifieds_payment`.`ad_id` = `classifieds_ad`.`id`
-AND `classifieds_payment`.`paid` =1
+AND `classifieds_payment`.`paid` = 1
 AND `classifieds_payment`.`paid_on` < NOW()
 AND DATE_ADD( `classifieds_payment`.`paid_on` , INTERVAL `classifieds_pricing`.`length`
 DAY ) > NOW()"""}, select_params=[PricingOptions.FEATURED_LISTING]).extra(order_by=['-featured', order + sort])
@@ -140,7 +144,11 @@ def prepare_sforms(fields, fields_left, post=None):
             options = field.options.split(',')
             choices = zip(options, options)
             choices.insert(0, ('', 'Any',))
-            form_field = forms.ChoiceField(label=field.label, required=False, help_text=field.help_text + u'\nHold ctrl or command on Mac for multiple selections.', choices=choices, widget=forms.SelectMultiple)
+            form_field = forms.ChoiceField(label=field.label,
+                    required=False,
+                    help_text=field.help_text + _(u'\nHold ctrl or command on Mac for multiple selections.'),
+                    choices=choices,
+                    widget=forms.SelectMultiple)
             # remove this field from fields_list
             fields_left.remove(field.name)
             select_fields[field.name] = form_field
@@ -160,12 +168,11 @@ class StrippingParser(HTMLParser.HTMLParser):
     valid_tags = ('b', 'i', 'br', 'p', 'strong', 'h1', 'h2', 'h3', 'em',
                   'span', 'ul', 'ol', 'li')
 
-    from htmlentitydefs import entitydefs  # replace entitydefs from sgmllib
-
     def __init__(self):
         HTMLParser.HTMLParser.__init__(self)
         self.result = ""
         self.endTagList = []
+        self.entitydefs = entitydefs
 
     def handle_data(self, data):
         if data:
@@ -209,6 +216,7 @@ class StrippingParser(HTMLParser.HTMLParser):
 
 def strip(s):
     """ Strip illegal HTML tags from string s """
+    # TODO replace with bleach
     parser = StrippingParser()
     parser.feed(s)
     parser.close()
@@ -278,7 +286,7 @@ def fields_for_ad(instance):
     # for the Ad instance
     fields_dict = SortedDict()
     fields = field_list(instance)
-    # this really, really should be refactored
+    # TODO this really, really should be refactored
     for field in fields:
         if field.field_type == Field.BOOLEAN_FIELD:
             fields_dict[field.name] = forms.BooleanField(label=field.label, required=False, help_text=field.help_text)
